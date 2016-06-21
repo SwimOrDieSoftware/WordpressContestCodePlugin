@@ -108,7 +108,7 @@ class Contest_Code_Checker_Loader {
 		return $hooks;
 
 	}
-
+	
 	/**
 	 * Register the filters and actions with WordPress.
 	 *

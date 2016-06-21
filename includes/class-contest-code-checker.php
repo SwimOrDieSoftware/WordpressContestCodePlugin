@@ -73,6 +73,7 @@ class Contest_Code_Checker {
 
 		$this->load_dependencies();
 		$this->set_locale();
+		$this->define_general_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
@@ -141,6 +142,17 @@ class Contest_Code_Checker {
 	}
 
 	/**
+	 * Registers all of the general hooks that will be used for both the admin and public
+	 * side of the plugin. For example registering custom post types.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 */
+	private function define_general_hooks() {
+		$this->loader->add_action("init", $this, "register_post_types");
+	}
+
+	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
@@ -153,6 +165,8 @@ class Contest_Code_Checker {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'register_menus');
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'wireup_settings');
 
 	}
 
@@ -210,6 +224,30 @@ class Contest_Code_Checker {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Registers the custom post types for the contest code checker.
+	 *
+	 * @since 1.0.0
+	 * @return nothing
+	 */
+	public function register_post_types() {
+		register_post_type("ccc_codes",
+			array(
+					"public" 			=> false,
+					"label" 			=> "Contest Codes",
+					"singular_name"		=> "ccc_code",
+					"name"				=> "Contest Codes",
+				));
+
+		register_post_type("ccc_contestants",
+			array(
+					"public" 			=> false,
+					"label" 			=> "Contestants",
+					"singular_name"		=> "ccc_contestant",
+					"name"				=> "Contestants",
+				));
 	}
 
 }
