@@ -20,7 +20,7 @@
  * @subpackage Contest_Code_Checker/public
  * @author     Your Name <email@example.com>
  */
-class Contest_Code_Checker_Public {
+class CCC_Contest_Code_Checker_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -41,6 +41,15 @@ class Contest_Code_Checker_Public {
 	private $version;
 
 	/**
+	 * Holds the display object
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var object $display 	An object of the display class
+	 */
+	private $display;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -51,7 +60,15 @@ class Contest_Code_Checker_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->load_dependencies();
+		$this->display = new CCC_Contest_Code_Checker_Public_Displays();
 
+	}
+
+	private function load_dependencies() {
+		$baseDir = plugin_dir_path( dirname( __FILE__ ) );
+
+		require_once $baseDir."public/partials/contest-code-checker-public-display.php";
 	}
 
 	/**
@@ -96,8 +113,27 @@ class Contest_Code_Checker_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/contest-code-checker-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script('jquery-validate', plugin_dir_url( __FILE__ ) . 'js/jquery.validate.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/contest-code-checker-public.js', array( 'jquery', 'jquery-validate' ), $this->version, false );
 
+	}
+
+	/**
+	 * Shortcode handling functionl, will call the appropriate function depending on the step the short code is on
+	 * 
+	 * @param  array $atts attributes that are specified in the shortcode
+	 * @return string       the output that should be displayed...
+	 */
+	public function handle_shortcode($atts) {
+		$output = "";
+
+		$output = $this->get_contest_code_form();
+
+		return $output;	
+	}
+
+	private function get_contest_code_form() {
+		return $this->display->contest_form();
 	}
 
 }

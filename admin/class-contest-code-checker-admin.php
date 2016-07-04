@@ -193,7 +193,8 @@ class Contest_Code_Checker_Admin {
 	}
 
 	public function show_contestants_page() {
-		// TODO: implement
+		$contestants = new CCC_Contest_Code_Checker_Admin_Contestants();
+		$contestants->display_page();
 	}
 
 	public function show_contest_codes_page() {
@@ -216,7 +217,9 @@ class Contest_Code_Checker_Admin {
 		require_once $baseDir . 'admin/partials/contest-code-checker-admin-settings.php';
 		require_once $baseDir . 'admin/partials/contest-code-checker-admin-display.php';
 		require_once $baseDir . 'admin/contest_codes/class-contest-codes-table.php';
+		require_once $baseDir . 'admin/contestants/class-contestants-table.php';
 		require_once $baseDir . 'admin/class-contest-code-checker-admin-contest-codes.php';
+		require_once $baseDir . 'admin/class-contest-code-checker-admin-contestants.php';
 
 	}
 

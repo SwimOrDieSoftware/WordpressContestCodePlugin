@@ -39,6 +39,24 @@ class CCC_Contest_Code_Checker_Admin_Displays {
   <?php
   }
 
+  public function contestant_listings() {
+    $contestants_table = new CCC_Contestants_Table();
+    $contestants_table->prepare_items();
+  ?>
+    <div class="wrap">
+      <h1><?php _e("Contest Codes", "contest-code"); ?></h1>
+      <form id="ccc-contest-codes-filter" method="get" action="<?php echo admin_url( 'admin.php?page=contest-code-contestants' ); ?>">
+        <div></div>
+        <input type="hidden" name="page" value="contest-code-contestants" />
+        <input type="hidden" name="ccc-action" value="bulk" />
+
+        <?php $contestants_table->views() ?>
+        <?php $contestants_table->display() ?>
+      </form>
+    </div>
+  <?php
+  }
+
   public function contest_code_form($code) {
   ?>
     <div class="wrap">

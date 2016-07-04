@@ -184,7 +184,9 @@ class Contest_Code_Checker {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Contest_Code_Checker_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new CCC_Contest_Code_Checker_Public( $this->get_plugin_name(), $this->get_version() );
+
+		add_shortcode("contest_code_checker", array($plugin_public, "handle_shortcode"));
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
