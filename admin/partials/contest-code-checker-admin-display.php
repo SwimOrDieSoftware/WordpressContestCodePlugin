@@ -1,16 +1,93 @@
 <?php
 
 /**
- * Provide a admin area view for the plugin
+ * Provide a admin area view for contest codes, forms, listings, etc...
  *
  * This file is used to markup the admin-facing aspects of the plugin.
  *
- * @link       http://example.com
  * @since      1.0.0
  *
  * @package    Contest_Code_Checker
  * @subpackage Contest_Code_Checker/admin/partials
  */
-?>
 
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
+/**
+ * Displays the admin contest codes, contestants, etc...
+ */
+class CCC_Contest_Code_Checker_Admin_Displays {
+
+  /**
+   * Displays the list of contest codes for the admin area
+   *
+   * @since 1.0.0
+   */
+  public function contest_code_listings() {
+      $contest_codes_table = new CCC_Contest_Codes_Table();
+      $contest_codes_table->prepare_items();
+  ?>
+    <div class="wrap">
+      <h1><?php _e("Contest Codes", "contest-code"); ?><a href="<?php echo esc_url( add_query_arg( array( 'ccc-action' => 'add-contest-code' ) ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'contest-codes' ); ?></a></h1>
+      <form id="ccc-contest-codes-filter" method="get" action="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>">
+      <?php //$discount_codes_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-discounts' ); ?>
+
+        <input type="hidden" name="post_type" value="ccc_codes" />
+        <input type="hidden" name="page" value="contest-codes" />
+
+        <?php $contest_codes_table->views() ?>
+        <?php $contest_codes_table->display() ?>
+      </form>
+    </div>
+  <?php
+  }
+
+  public function contest_code_form($code) {
+  ?>
+    <div class="wrap">
+      <h2><?php if($code->get_ID() > 0) :
+          _e("Edit Contest Code", "contest-code");
+        else: 
+          _e("Add Contest Code", "contest-code");
+        endif; ?> - <a href="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'rsvp-pro-plugin' ); ?></a>
+      </h2>
+      <form id="rsvp-pro-reminder-form" action="<?php echo admin_url('admin.php?page=contest-codes'); ?>" method="post">
+        <table class="form-table">
+          <tbody>
+            <tr>
+              <th scope="row" valign="top">
+                <label for="contest_code"><?php _e( 'Contest code', 'contest-code' ); ?>:</label>
+              </th>
+              <td>
+                <input name="post_title" id="contest_code" type="text" value="<?php echo esc_attr( $code->get_code() ); ?>" style="width: 300px;" required/>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" valign="top">
+                <label for="prize"><?php _e( 'Prize associated with code', 'contest-code' ); ?>:</label>
+              </th>
+              <td>
+                <input name="prize" id="prize" type="text" value="<?php echo esc_attr( $code->get_prize() ); ?>" style="width: 300px;"/>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row" valign="top">
+                <label for="hasBeenUsed"><?php _e( 'Has this code been used?', 'contest-code' ); ?>:</label>
+              </th>
+              <td>
+                <input type="checkbox" name="hasBeenUsed" id="hasBeenUsed" value="Y" 
+                  <?php echo ($code->get_has_been_used()) ? "checked=\"checked\"" : "";?> />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="submit">
+          <input type="hidden" name="page" value="contest-codes" />
+          <input type="hidden" name="ccc-action" value="save_contest_codes"/>
+          <input type="hidden" name="contest_code" value="<?php echo absint( $code->get_ID() ); ?>"/>
+          <input type="hidden" name="contest-code-nonce" value="<?php echo wp_create_nonce( 'contest-code-form'); ?>"/>
+          <input type="submit" value="<?php _e( 'Save Contest Code', 'rsvp-pro-plugin' ); ?>" class="button-primary"/>
+        </p>
+      </form>
+    </div>
+  <?php
+  }
+}

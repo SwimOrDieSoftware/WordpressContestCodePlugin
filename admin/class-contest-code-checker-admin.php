@@ -190,7 +190,8 @@ class Contest_Code_Checker_Admin {
 	}
 
 	public function show_contest_codes_page() {
-		// TODO: implement
+		$contest_codes = new CCC_Contest_Code_Checker_Admin_Contest_Codes();
+		$contest_codes->display_page();
 	}
 
 	/**
@@ -198,7 +199,13 @@ class Contest_Code_Checker_Admin {
 	 * @return [type] [description]
 	 */
 	private function load_dependencies() {
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/contest-code-checker-admin-settings.php';
+		$baseDir = plugin_dir_path( dirname( __FILE__ ) );
+
+		require_once $baseDir . 'admin/partials/contest-code-checker-admin-settings.php';
+		require_once $baseDir . 'admin/partials/contest-code-checker-admin-display.php';
+		require_once $baseDir . 'admin/contest_codes/class-contest-codes-table.php';
+		require_once $baseDir . 'admin/class-contest-code-checker-admin-contest-codes.php';
+
 	}
 
 	/**

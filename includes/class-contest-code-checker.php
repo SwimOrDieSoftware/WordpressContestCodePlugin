@@ -97,28 +97,33 @@ class Contest_Code_Checker {
 	 */
 	private function load_dependencies() {
 
+		$pluginPath = plugin_dir_path( dirname( __FILE__ ) );
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-contest-code-checker-loader.php';
+		require_once $pluginPath . 'includes/class-contest-code-checker-loader.php';
+
+		/* Data Classes */
+		require_once $pluginPath . 'includes/class-contest-code-checker-contest-codes.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-contest-code-checker-i18n.php';
+		require_once $pluginPath . 'includes/class-contest-code-checker-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-contest-code-checker-admin.php';
+		require_once $pluginPath . 'admin/class-contest-code-checker-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-contest-code-checker-public.php';
+		require_once $pluginPath . 'public/class-contest-code-checker-public.php';
 
 		$this->loader = new Contest_Code_Checker_Loader();
 
@@ -235,18 +240,35 @@ class Contest_Code_Checker {
 	public function register_post_types() {
 		register_post_type("ccc_codes",
 			array(
-					"public" 			=> false,
-					"label" 			=> "Contest Codes",
-					"singular_name"		=> "ccc_code",
-					"name"				=> "Contest Codes",
+					"public" 				=> false,
+					"publicly_queryable"	=> false,
+					"show_in_menu"			=> false,
+					"label" 				=> __("Contest Codes", "contest-code"),
+					"show_in_nav_menus"		=> false,
+					"labels"				=> array(
+												   	'singular' => __("Contest Code", "contest-code"),
+													'plural'   => __("Contest Codes", "contest-code")
+												),
+					"has_archive"			=> false,
+					"hierarchical"			=> false,
+					"singular_name"			=> "ccc_code",
+					"name"					=> "Contest Codes",
+					"supports"				=> array("title"),
 				));
 
 		register_post_type("ccc_contestants",
 			array(
-					"public" 			=> false,
-					"label" 			=> "Contestants",
-					"singular_name"		=> "ccc_contestant",
-					"name"				=> "Contestants",
+					"public" 				=> false,
+					"show_in_menu"			=> false,
+					"label" 				=> __("Contestants", "contest-code"),
+					"show_in_nav_menus"		=> false,
+					"singular_name"			=> "ccc_contestant",
+					"name"					=> "Contestants",
+					"has_archive"			=> false,
+					"hierarchical"			=> false,
+					"singular_name"			=> "ccc_code",
+					"name"					=> "Contest Codes",
+					"supports"				=> array("title"),
 				));
 	}
 
