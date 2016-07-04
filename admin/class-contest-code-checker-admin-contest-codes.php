@@ -53,6 +53,8 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
 			$this->save_contest_code();
 		} elseif($action == "delete-contest-code") {
 			$this->delete_contest_code();
+		} elseif($action == "handle_import_contest_codes") {
+			$this->handle_import();
 		} elseif($action == "bulk") {
 			if(isset($_GET['action']) && (strtolower($_GET['action']) == "delete")) {
 				$this->bulk_delete_contest_codes();
@@ -83,12 +85,21 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
   	}
 
   	/**
+  	 * Displays the contest code import form. 
+  	 *
+  	 * @since 1.0.0
+  	 */
+  	public function display_import_form() {
+  		$this->display->contest_code_import_form();
+  	}
+
+  	/**
   	 * Handles the saving of contest codes
   	 */
   	private function save_contest_code() {
   		if(wp_verify_nonce($_POST['contest-code-nonce'], "contest-code-form")) {
 	  		$codeId = false;
-	  		if(isset($_GET['contest_code']) && ($_POST['contest_code'] > 0)) {
+	  		if(isset($_POST['contest_code']) && ($_POST['contest_code'] > 0)) {
 	  			$codeId = absint($_POST['contest_code']);
 	  		}
 
@@ -98,6 +109,7 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
 	  		$data['hasBeenUsed'] = (strtoupper($_POST['hasBeenUsed']) == "Y") ? true : false;
 	  		$data['prize'] = $_POST['prize'];
 	  		$data['post_title'] = $_POST['post_title'];
+	  		$data['prizeInformation'] = $_POST['prizeInformation'];
 	  		$code->save($data);
 	  	}
   	}
@@ -132,5 +144,41 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
 	      		$c->delete();
 	    	} 
 	    }
+  	}
+
+  	/**
+  	 * Handles the importing of contest codes from a given file. 
+  	 * 
+  	 * @since 1.0.0
+  	 */
+  	private function handle_import() {
+  		if( !empty($_REQUEST['contest-code-import-nonce']) && 
+  			wp_verify_nonce($_REQUEST['contest-code-import-nonce'], "contest-code-import-form") && 
+  			(count($_FILES) > 0) ) {
+
+      		require(plugin_dir_path( dirname( __FILE__ ) ).'includes/spreadsheet-reader/php-excel-reader/excel_reader2.php');
+      		require(plugin_dir_path( dirname( __FILE__ ) ).'includes/spreadsheet-reader/SpreadsheetReader.php');
+
+      		$data = new SpreadsheetReader($_FILES['importFile']['tmp_name'], $_FILES['importFile']['name']);
+
+			foreach($data as $row) {
+				if((count($row) > 0) && !empty($row[0])) {
+					$code = new CCC_Contest_Codes();
+					$data = array();
+
+					$data['post_title'] = $row[0];
+
+					if(!empty($row[1])) {
+						$data['prize'] = $row[1];
+					}
+
+					if(!empty($row[2])) {
+						$data['prizeInformation'] = $row[2];
+					}
+
+					$code->save($data);
+				} // if ((count($row)...
+			} // foreach($data as $row..
+  		} // nonce check if-statement
   	}
 }

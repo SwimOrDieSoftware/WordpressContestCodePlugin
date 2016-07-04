@@ -135,6 +135,13 @@ class Contest_Code_Checker_Admin {
 			$this->get_required_capability(),
 			"contest-codes",
 			array($this, "show_contest_codes_page"));
+
+		add_submenu_page("contest-code-checker",
+			__("Import Contest Codes", "contest-code"),
+			__("Import Contest Codes", "contest-code"),
+			$this->get_required_capability(), 
+			"contest-codes-import",
+			array($this, "show_import_contest_codes_page"));
 	}
 
 	/**
@@ -192,6 +199,11 @@ class Contest_Code_Checker_Admin {
 	public function show_contest_codes_page() {
 		$contest_codes = new CCC_Contest_Code_Checker_Admin_Contest_Codes();
 		$contest_codes->display_page();
+	}
+
+	public function show_import_contest_codes_page() {
+		$contest_codes = new CCC_Contest_Code_Checker_Admin_Contest_Codes();
+		$contest_codes->display_import_form();
 	}
 
 	/**

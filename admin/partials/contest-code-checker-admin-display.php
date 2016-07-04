@@ -28,8 +28,7 @@ class CCC_Contest_Code_Checker_Admin_Displays {
     <div class="wrap">
       <h1><?php _e("Contest Codes", "contest-code"); ?><a href="<?php echo esc_url( add_query_arg( array( 'ccc-action' => 'add-contest-code' ) ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'contest-codes' ); ?></a></h1>
       <form id="ccc-contest-codes-filter" method="get" action="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>">
-      <?php //$discount_codes_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-discounts' ); ?>
-
+        <div></div>
         <input type="hidden" name="page" value="contest-codes" />
         <input type="hidden" name="ccc-action" value="bulk" />
 
@@ -49,7 +48,7 @@ class CCC_Contest_Code_Checker_Admin_Displays {
           _e("Add Contest Code", "contest-code");
         endif; ?> - <a href="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'rsvp-pro-plugin' ); ?></a>
       </h2>
-      <form id="rsvp-pro-reminder-form" action="<?php echo admin_url('admin.php?page=contest-codes'); ?>" method="post">
+      <form id="contest-code-form" action="<?php echo admin_url('admin.php?page=contest-codes'); ?>" method="post">
         <table class="form-table">
           <tbody>
             <tr>
@@ -77,6 +76,14 @@ class CCC_Contest_Code_Checker_Admin_Displays {
                   <?php echo ($code->get_has_been_used()) ? "checked=\"checked\"" : "";?> />
               </td>
             </tr>
+            <tr>
+              <th scope="row" valign="top">
+                <label for="prizeInformation"><?php _e("Prize Details", "contest-code"); ?></label>
+              </th>
+              <td>
+                <?php wp_editor( $code->get_prize_information(), "prizeInformation", $settings = array() ); ?>
+              </td>
+            </tr>
           </tbody>
         </table>
         <p class="submit">
@@ -84,7 +91,32 @@ class CCC_Contest_Code_Checker_Admin_Displays {
           <input type="hidden" name="ccc-action" value="save_contest_codes"/>
           <input type="hidden" name="contest_code" value="<?php echo absint( $code->get_ID() ); ?>"/>
           <input type="hidden" name="contest-code-nonce" value="<?php echo wp_create_nonce( 'contest-code-form'); ?>"/>
-          <input type="submit" value="<?php _e( 'Save Contest Code', 'rsvp-pro-plugin' ); ?>" class="button-primary"/>
+          <input type="submit" value="<?php _e( 'Save Contest Code', 'contest-code' ); ?>" class="button-primary"/>
+        </p>
+      </form>
+    </div>
+  <?php
+  }
+
+  public function contest_code_import_form() {
+  ?>
+    <div class="wrap">
+      <h2><?php _e("Import Contest Codes", "contest-code"); ?></h2>
+      <form id="contest-code-import-form" action="<?php echo admin_url('admin.php?page=contest-codes'); ?>" method="post" enctype="multipart/form-data" >
+        <p>
+          <?php _e("Import contest codes from a Excel or CSV file. The format is as follows:", "contest-code"); ?>
+        </p>
+        <ul>
+          <li><?php _e("Column 1: Contest Code", "contest-code"); ?></li>
+          <li><?php _e("Column 2: Prize (if any)", "contest-code"); ?></li>
+          <li><?php _e("Column 3: Prize description", "contest-code"); ?></li>
+        </ul>
+        <p><input type="file" name="importFile" id="importFile" /></p>
+        <p class="submit">
+          <input type="hidden" name="page" value="contest-codes" />
+          <input type="hidden" name="ccc-action" value="handle_import_contest_codes" />
+          <input type="hidden" name="contest-code-import-nonce" value="<?php echo wp_create_nonce("contest-code-import-form"); ?>" />
+          <input type="submit" value="<?php _e("Import Contest Codes", "contest-code"); ?>" class="button-primary" />
         </p>
       </form>
     </div>

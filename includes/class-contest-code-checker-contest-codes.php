@@ -54,6 +54,13 @@ class CCC_Contest_Codes {
 	public $prize;
 
 	/**
+	 * The prize information for the code, if any 
+	 *
+	 * @since 1.0.0
+	 */
+	public $prizeInformation;
+
+	/**
 	 * Declare the default properties in WP_Post as we can't extend it
 	 * Anything we've declared above has been removed.
 	 */
@@ -119,6 +126,10 @@ class CCC_Contest_Codes {
 			$this->$key = $value;
 		}
 
+		$this->hasBeenUsed = get_post_meta($this->ID, "ccc_has_been_used", true);
+		$this->prize = get_post_meta($this->ID, "ccc_prize", true);
+		$this->prizeInformation = get_post_meta($this->ID, "ccc_prize_information", true);
+
 		return true;
 
 	}
@@ -138,13 +149,9 @@ class CCC_Contest_Codes {
 			"post_title"	=> $this->code,
 			"ID" 			=> $this->ID,
 		);
-
-		if($this->ID != 0) {
-			$default_values["ID"] = $this->ID;
-		}
-
+		
 		$args = wp_parse_args($data, $default_values);
-
+		
 		$id = wp_insert_post($args, true);
 
 		$contest_code = WP_Post::get_instance($id);
@@ -155,6 +162,10 @@ class CCC_Contest_Codes {
 
 		if ( ! add_post_meta( $id, 'ccc_prize', $data['prize'], true ) ) { 
 			update_post_meta( $id, 'ccc_prize', $data['prize'] );
+		}
+
+		if ( ! add_post_meta( $id, "ccc_prize_information", $data['prizeInformation'], true ) ) {
+			update_post_meta( $id, "ccc_prize_information", $data['prizeInformation'] );
 		}
 
 		return $this->populate_data($contest_code);
@@ -169,6 +180,7 @@ class CCC_Contest_Codes {
 		if($this->ID > 0) {
 			delete_post_meta($this->ID, "ccc_has_been_used");
 			delete_post_meta($this->ID, "ccc_prize");
+			delete_post_meta($this->ID, "ccc_prize_information");
 			wp_delete_post($this->ID, true);
 		}
 	}
@@ -224,5 +236,13 @@ class CCC_Contest_Codes {
 		}
 
 		return $this->hasBeenUsed;
+	}
+
+	public function get_prize_information() {
+		if(!isset($this->prizeInformation)) {
+			$this->prizeInformation = get_post_meta($this->ID, "ccc_prize_information", true);
+		}
+
+		return $this->prizeInformation;
 	}
 }
