@@ -161,6 +161,19 @@ class CCC_Contest_Codes {
 	}
 
 	/**
+	 * Deletes a given contest code and its related meta fields 
+	 * 
+	 * @since 1.0.0
+	 */
+	public function delete() {
+		if($this->ID > 0) {
+			delete_post_meta($this->ID, "ccc_has_been_used");
+			delete_post_meta($this->ID, "ccc_prize");
+			wp_delete_post($this->ID, true);
+		}
+	}
+
+	/**
 	 * Get the ID for the object
 	 *
 	 * @since 1.0.0

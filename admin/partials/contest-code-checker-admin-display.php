@@ -30,8 +30,8 @@ class CCC_Contest_Code_Checker_Admin_Displays {
       <form id="ccc-contest-codes-filter" method="get" action="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>">
       <?php //$discount_codes_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-discounts' ); ?>
 
-        <input type="hidden" name="post_type" value="ccc_codes" />
         <input type="hidden" name="page" value="contest-codes" />
+        <input type="hidden" name="ccc-action" value="bulk" />
 
         <?php $contest_codes_table->views() ?>
         <?php $contest_codes_table->display() ?>
