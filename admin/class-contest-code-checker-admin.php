@@ -176,10 +176,17 @@ class Contest_Code_Checker_Admin {
 											 "ccc_options",
 											 "contest_code_checker_options");
 
+		add_settings_field("ccc_contest_not_running", 
+											__("Text for when the contest is not currently running", "contest-code"),
+											array($this, "display_contest_not_running_field"),
+											"ccc_options",
+											"contest_code_checker_options");
+
 		register_setting("contest_code_checker_options", "ccc_start_date");
 		register_setting("contest_code_checker_options", "ccc_end_date");
 		register_setting("contest_code_checker_options", "ccc_text_winning");
 		register_setting("contest_code_checker_options", "ccc_text_losing");
+		register_setting("contest_code_checker_options", "ccc_contest_not_running");
 	}
 
 	/**
@@ -265,6 +272,12 @@ class Contest_Code_Checker_Admin {
 		?>
 			<textarea name="ccc_text_losing" id="ccc_text_losing" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_losing")); ?></textarea>
 		<?
+	}
+
+	public function display_contest_not_running_field($args) {
+		?>
+			<textarea name="ccc_contest_not_running" id="ccc_contest_not_running" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_contest_not_running")); ?></textarea>
+		<?	
 	}
 
 }

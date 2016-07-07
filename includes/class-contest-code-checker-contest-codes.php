@@ -155,10 +155,7 @@ class CCC_Contest_Codes {
 		$id = wp_insert_post($args, true);
 
 		$contest_code = WP_Post::get_instance($id);
-
-		if ( ! add_post_meta( $id, 'ccc_has_been_used', $data['hasBeenUsed'], true ) ) { 
-			update_post_meta( $id, 'ccc_has_been_used', $data['hasBeenUsed'] );
-		}
+		$this->set_has_been_used($data['hasBeenUsed']);
 
 		if ( ! add_post_meta( $id, 'ccc_prize', $data['prize'], true ) ) { 
 			update_post_meta( $id, 'ccc_prize', $data['prize'] );
@@ -244,5 +241,13 @@ class CCC_Contest_Codes {
 		}
 
 		return $this->prizeInformation;
+	}
+
+	public function set_has_been_used($beenUsed) {
+		$beenUsed = boolval($beenUsed);
+
+		if ( ! add_post_meta( $this->ID, 'ccc_has_been_used', $beenUsed, true ) ) { 
+			update_post_meta( $this->ID, 'ccc_has_been_used', $beenUsed );
+		}
 	}
 }

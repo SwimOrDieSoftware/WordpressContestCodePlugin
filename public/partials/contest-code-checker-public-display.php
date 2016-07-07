@@ -27,6 +27,7 @@ class CCC_Contest_Code_Checker_Public_Displays {
 		<div id="contest_code_checker_container">
 			<form name="contest_code_checker" id="contest_code_checker" method="post">
 				<input type="hidden" name="step" value="check_code" />
+				<?php wp_nonce_field("contest_code_frontend_form"); ?>
 
 				<p class="ccc_form_element">
 					<label for="contestants_name"><?php _e("Your Name", "contest-code"); ?></label>
@@ -51,5 +52,61 @@ class CCC_Contest_Code_Checker_Public_Displays {
 	<?php
 		$output = ob_get_clean();
 		return $output;
+	}
+
+	public function contest_has_not_started() {
+		ob_start();
+	?>
+		<div id="contest_code_checker_container">
+		<?php
+			if(get_option("ccc_contest_not_running") != "") {
+				echo get_option("ccc_contest_not_running");
+			} else {
+		?>
+			<p><?php _e("This contest is currently not running.", "contest-code"); ?></p>
+		<?php
+			}
+		?>
+		</div>
+	<?php
+		return ob_get_clean();
+	}
+
+	public function losing_code_entered() {
+		ob_start();
+	?>
+		<div id="contest_code_checker_container">
+		<?php
+			if(get_option("ccc_text_losing") != "") {
+				echo get_option("ccc_text_losing");
+			} else {
+		?>
+				<p><?php _e("The code you entered was not a winner.", "contest-code"); ?></p>
+		<?php
+			}
+		?>
+		</div>
+	<?php
+		return ob_get_clean();
+	}
+
+	public function winning_code_entered($code) {
+		ob_start();
+	?>
+		<div id="contest_code_checker_container">
+			<?php
+				if(get_option("ccc_text_winning") != "") {
+					echo get_option("ccc_text_winning");
+				} else {
+			?>
+					<p><?php _e("You have entered a winner!", "contest-code"); ?></p>
+			<?php
+				}
+
+				echo "<p>".$code->get_prize_information()."</p>";
+			?>
+		</div>
+	<?php
+		return ob_get_clean();
 	}
 }

@@ -107,6 +107,7 @@ class Contest_Code_Checker {
 
 		/* Data Classes */
 		require_once $pluginPath . 'includes/class-contest-code-checker-contest-codes.php';
+		require_once $pluginPath . 'includes/class-contest-code-checker-contestant.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality

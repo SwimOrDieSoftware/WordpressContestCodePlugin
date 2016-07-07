@@ -126,14 +126,145 @@ class CCC_Contest_Code_Checker_Public {
 	 */
 	public function handle_shortcode($atts) {
 		$output = "";
+		$action = "";
 
-		$output = $this->get_contest_code_form();
+		if($this->is_contest_running()) {
+			if(isset($_REQUEST['step'])) {
+				$action = strtolower($_REQUEST['step']);
+			}
 
+			if($action == "check_code") {
+				$output = $this->check_contest_code();
+			} else {
+				$output = $this->get_contest_code_form();	
+			}	
+		} else {
+			$output = $this->contest_has_not_started();
+		}
+		
+		
 		return $output;	
 	}
 
+	/**
+	 * Returns the contest code form that allows users to enter in their information. 
+	 * 
+	 * @return string The HTML for the form...
+	 */
 	private function get_contest_code_form() {
 		return $this->display->contest_form();
 	}
 
+	/**
+	 * Checks the contest code and records the information
+	 *
+	 * @return string The HTML for if the persond won or lost
+	 */
+	private function check_contest_code() {
+		global $wpdb; 
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'contest_code_frontend_form' ) ) {
+			return $this->get_contest_code_form();
+		}
+
+
+		if(isset($_POST['contestants_code']) && !empty($_POST['contestants_code'])) {
+			$cc = trim(strtolower($_POST['contestants_code']));
+
+			// Try to find the contest code....
+			$sql = "SELECT ID FROM ".$wpdb->posts." WHERE post_title = %s AND post_type='ccc_codes'";
+			$codes = $wpdb->get_results($wpdb->prepare($sql, $cc));
+			if(count($codes) > 0) {
+				foreach ( $codes as $c ) {
+					$hasBeenUsed = get_post_meta($c->ID, "ccc_has_been_used", true);
+					if(!boolval($hasBeenUsed)) {	
+						$customer = new CCC_Contestant();
+						$code = new CCC_Contest_Codes($c->ID);
+
+						$data = array(
+								"post_title" => $_POST['contestants_name'],
+								"contestCodeID" => $c->ID, 
+								"email" => $_POST['contestants_email'],
+							);
+						$customer->save($data);
+
+						// toggle the has been used flag...
+						$code->set_has_been_used(true);
+
+						if($code->get_prize() != "") {
+							return $this->display_winning_message($code);
+						}
+					}
+				}
+			} else {
+				$customer = new CCC_Contestant();
+
+				$data = array(
+						"post_title" => $_POST['contestants_name'],
+						 "email" => $_POST['contestants_email'],
+						 "invalidPrizeCode" => $cc,
+					);
+				$customer->save($data);
+			}
+
+		} 
+
+		return $this->display_losing_message();
+		
+	}
+
+	/**
+	 * Gets the text for when the contest has not yet started.
+	 *
+	 * @since 1.0.0
+	 * @return string Text for whent he contest has not yet started
+	 */
+	private function contest_has_not_started() {
+		return $this->display->contest_has_not_started();
+	}
+
+	/**
+	 * Checks to see if the contest is currently running
+	 *
+	 * @since 1.0.0
+	 * @return boolean True if the contest is within a given date range
+	 */
+	private function is_contest_running() {
+		$start_date = get_option("ccc_start_date");
+		$end_date = get_option("ccc_end_date");
+		$now = time();
+
+		if(empty($end_date) && empty($start_date)) {
+			return true;
+		}
+
+		if(empty($end_date)) {
+			$start_date = strtotime($start_date);	
+
+			return ($start_date <= $now);
+		}
+
+		if(empty($start_date)) {
+			$end_date = strtotime($end_date);
+
+			return ($end_date >= $now);
+		}
+
+		$start_date = strtotime(get_option("ccc_start_date"));
+		$end_date = strtotime(get_option("ccc_end_date"));
+		
+		if(($start_date <= $now) && ($end_date >= $now)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private function display_losing_message() {
+		return $this->display->losing_code_entered();
+	}
+
+	private function display_winning_message($code) {
+		return $this->display->winning_code_entered($code);
+	}
 }
