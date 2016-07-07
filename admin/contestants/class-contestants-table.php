@@ -142,6 +142,22 @@ class CCC_Contestants_Table extends WP_List_Table {
 		return esc_html(stripslashes( $item['title'] )) . $this->row_actions( $row_actions );
 	}
 
+	public function column_contest_code($item) {
+		$code = "";
+
+		if(isset($item['contest_code']) && (intval($item['contest_code']) > 0)) {
+			$tmp = new CCC_Contest_Codes($item['contest_code']);
+
+			$code = esc_html($tmp->get_code());
+
+			if(!empty($tmp->get_prize())) {
+				$code .= " - <b>".__("winner", 'contest-code')."</b>";
+			}
+		}
+
+		return $code;
+	}
+
 	/**
 	 * Render the checkbox column
 	 *
@@ -170,7 +186,8 @@ class CCC_Contestants_Table extends WP_List_Table {
 			'cb'         	=> '<input type="checkbox" />',
 			'title'         => __( 'Contestant', 'contest-code' ),
       		'email'         => __( 'Email Address', 'contest-code' ),
-			'contest_code'     => __( 'Contest Code', 'contest-code' ),
+			'contest_code'  => __( 'Contest Code', 'contest-code' ),
+			'invalid_code'	=> __( 'Invalid Code', 'contest-code' ),
 		);
 
 		return $columns;
@@ -259,15 +276,15 @@ class CCC_Contestants_Table extends WP_List_Table {
 		);
 
 		$contestants = new WP_Query($args);
-
 		while ( $contestants->have_posts() ) {
 			$contestants->the_post();
 
 			$data[] = array(
 				"ID"			=> $contestants->post->ID,
 				"title" 		=> get_the_title($contestants->post->ID),
-				"email" 		=> get_post_meta($contestants->post->ID, "ccc_email"),
-				"contest_code"	=> get_post_meta($contestants->post->ID, "ccc_prize", true),
+				"email" 		=> get_post_meta($contestants->post->ID, "ccc_email", true),
+				"contest_code"	=> get_post_meta($contestants->post->ID, "ccc_contest_code_id", true),
+				"invalid_code" 	=> get_post_meta($contestants->post->ID, "ccc_invalid_contest_code", true),
 			);
 		}
 
@@ -294,7 +311,7 @@ class CCC_Contestants_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$this->items = $this->contest_codes_data();
+		$this->items = $this->contestants_data();
 
 		$count = wp_count_posts('ccc_contestants');
 		$total = 0;
