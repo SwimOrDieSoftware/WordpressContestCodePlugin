@@ -23,6 +23,11 @@ class CCC_Contest_Code_Checker_Public_Displays {
 	public function contest_form() {
 		$output = "";
 		ob_start();
+
+		$nameLabel = apply_filters("ccc_form_name_label_text", __("Your Name", "contest-code"));
+		$emailLabel = apply_filters("ccc_form_email_label_text", __("Your Email", "contest-code"));
+		$prizeCodeLabel = apply_filters("ccc_form_prize_code_label_text", __("Prize Code", "contest-code"));
+		$submitPrizeLabel = apply_filters("ccc_form_submit_prize_label_text", __("Submit Prize", "contest-code"));
 	?>
 		<div id="contest_code_checker_container">
 			<form name="contest_code_checker" id="contest_code_checker" method="post">
@@ -30,22 +35,22 @@ class CCC_Contest_Code_Checker_Public_Displays {
 				<?php wp_nonce_field("contest_code_frontend_form"); ?>
 
 				<p class="ccc_form_element">
-					<label for="contestants_name"><?php _e("Your Name", "contest-code"); ?></label>
+					<label for="contestants_name"><?php echo esc_html($nameLabel); ?></label>
 					<input type="text" name="contestants_name" id="contestants_name" required />
 				</p>
 
 				<p class="ccc_form_element">
-					<label for="contestants_email"><?php _e("Your Email", "contest-code"); ?></label>
+					<label for="contestants_email"><?php echo esc_html($emailLabel); ?></label>
 					<input type="text" name="contestants_email" id="contestants_email" />
 				</p>
 
 				<p class="ccc_form_element">
-					<label for="contestants_code"><?php _e("Prize Code", "contest-code"); ?></label>
+					<label for="contestants_code"><?php echo esc_html($prizeCodeLabel); ?></label>
 					<input type="text" name="contestants_code" id="contestants_code" required />
 				</p>
 
 				<p class="ccc_form_submit">
-					<input type="submit" value="<?php _e("Submit Prize", "contest-code"); ?>" />
+					<input type="submit" value="<?php echo esc_html($submitPrizeLabel); ?>" />
 				</p>
 			</form>
 		</div>
