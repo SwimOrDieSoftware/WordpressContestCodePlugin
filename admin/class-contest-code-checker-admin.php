@@ -208,7 +208,7 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function show_settings_page() {
-		$settings = new Contest_Code_Checker_Admin_Settings();
+		$settings = new CCC_Contest_Code_Checker_Admin_Settings();
 		$settings->display_settings();
 	}
 
