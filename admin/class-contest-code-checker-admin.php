@@ -52,6 +52,19 @@ class Contest_Code_Checker_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->load_dependencies();
+
+		if(isset($_GET['page']) && 
+		   (strToLower($_GET['page']) == 'contest-code-contestants') && 
+		   (strtolower($_GET['ccc-action']) == "contest-code-export-winners")) {
+		   	add_action('init', array($this, "export_winners"));
+		}
+
+
+		if(isset($_GET['page']) && 
+		   (strToLower($_GET['page']) == 'contest-code-contestants') && 
+		   (strtolower($_GET['ccc-action']) == "contest-code-export")) {
+		   	add_action('init', array($this, "export_all"));
+		}
 	}
 
 	/**
@@ -60,7 +73,7 @@ class Contest_Code_Checker_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_name,
+		wp_enqueue_style( "contest-code-jquery-ui-css",
 											plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css',
 											array(),
 											$this->version,
@@ -278,6 +291,89 @@ class Contest_Code_Checker_Admin {
 		?>
 			<textarea name="ccc_contest_not_running" id="ccc_contest_not_running" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_contest_not_running")); ?></textarea>
 		<?	
+	}
+
+	/**
+	 * Exports all of the winners 
+	 * @return A CSV with the winner information
+	 * @since 1.0.0
+	 */
+	public function export_winners() {
+		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
+			// IE Bug in download name workaround
+			ini_set( 'zlib.output_compression','Off' );
+		}
+		header('Content-Description: Contest Code Checker Export');
+		header("Content-Type: application/vnd.ms-excel", true);
+		header('Content-Disposition: attachment; filename="ccc_winners.csv"');
+		$csv = "\"Name\",\"Email\",\"Contest Code\",\"Prize\"\r\n";
+
+		$args = array(
+				'post_type'	=> "ccc_contestants",
+				"meta_key"	=> "ccc_contest_code_id",
+				"meta_value" => "0",
+				"meta_compare" => ">",
+			);
+		$contestants = new WP_Query($args);
+		if ( $contestants->have_posts() ) {
+			while ( $contestants->have_posts() ) {
+				$contestants->the_post();
+				$id = $contestants->post->ID;
+				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
+				$cc = new CCC_Contest_Codes($ccId);
+				if(!empty($cc->get_prize())) {
+					$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";	
+					$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
+					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\"\r\n";
+				}
+			}
+		}
+
+		echo $csv;
+		wp_reset_postdata();
+		exit;
+	}
+
+	/**
+	 * Exports all of the contestants
+	 * @return A CSV with all of the contestants information
+	 * @since 1.0.0
+	 */
+	public function export_all() {
+		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
+			// IE Bug in download name workaround
+			ini_set( 'zlib.output_compression','Off' );
+		}
+		header('Content-Description: Contest Code Checker Export');
+		header("Content-Type: application/vnd.ms-excel", true);
+		header('Content-Disposition: attachment; filename="ccc_contestants.csv"');
+		$csv = "\"Name\",\"Email\",\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
+
+		$args = array(
+				'post_type'	=> "ccc_contestants"
+			);
+		$contestants = new WP_Query($args);
+		if ( $contestants->have_posts() ) {
+			while ( $contestants->have_posts() ) {
+				$contestants->the_post();
+				$id = $contestants->post->ID;
+				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
+				$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";	
+				$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
+				if($ccId > 0) {
+					$cc = new CCC_Contest_Codes($ccId);
+					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",";	
+				} else {
+					$csv .= "\"\",\"\",";
+				}
+				
+				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"\r\n";
+			}
+		}
+
+		echo $csv;
+		wp_reset_postdata();
+		exit;
 	}
 
 }

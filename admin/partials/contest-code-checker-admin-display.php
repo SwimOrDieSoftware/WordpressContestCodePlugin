@@ -45,12 +45,16 @@ class CCC_Contest_Code_Checker_Admin_Displays {
   ?>
     <div class="wrap">
       <h1><?php _e("Contest Codes", "contest-code"); ?></h1>
+      <div id="contestantExportContainer">
+          <a href="<?php echo admin_url('admin.php?page=contest-code-contestants&ccc-action=contest-code-export-winners'); ?>" class="button action"><?php _e('Export Winners', 'contest-code'); ?></a>
+          <a href="<?php echo admin_url('admin.php?page=contest-code-contestants&ccc-action=contest-code-export'); ?>" class="button action"><?php _e('Export All', 'contest-code'); ?></a>
+      </div>
       <form id="ccc-contest-codes-filter" method="get" action="<?php echo admin_url( 'admin.php?page=contest-code-contestants' ); ?>">
         <div></div>
         <input type="hidden" name="page" value="contest-code-contestants" />
         <input type="hidden" name="ccc-action" value="bulk" />
-
         <?php $contestants_table->views() ?>
+        
         <?php $contestants_table->display() ?>
       </form>
     </div>
