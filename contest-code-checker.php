@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 function activate_contest_code_checker() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-contest-code-checker-activator.php';
-	Contest_Code_Checker_Activator::activate();
+	CCC_Contest_Code_Checker_Activator::activate();
 }
 
 /**
@@ -37,7 +37,7 @@ function activate_contest_code_checker() {
  */
 function deactivate_contest_code_checker() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-contest-code-checker-deactivator.php';
-	Contest_Code_Checker_Deactivator::deactivate();
+	CCC_Contest_Code_Checker_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_contest_code_checker' );
