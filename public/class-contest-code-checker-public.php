@@ -167,7 +167,8 @@ class CCC_Contest_Code_Checker_Public {
 			return $this->get_contest_code_form();
 		}
 
-
+		do_action("ccc_handle_contest_code_submission", $_POST);
+		
 		if(isset($_POST['contestants_code']) && !empty($_POST['contestants_code'])) {
 			$cc = trim(strtolower($_POST['contestants_code']));
 
