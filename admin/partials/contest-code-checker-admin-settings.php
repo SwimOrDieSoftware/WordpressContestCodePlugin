@@ -13,7 +13,7 @@
 /**
  * Displays the admin settings area
  */
-class Contest_Code_Checker_Admin_Settings {
+class CCC_Contest_Code_Checker_Admin_Settings {
 
 	public function display_settings() {
 	?>

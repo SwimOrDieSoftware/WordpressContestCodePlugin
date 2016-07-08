@@ -21,7 +21,7 @@
  * @subpackage Contest_Code_Checker/includes
  * @author     Mike de Libero <mikede@mde-dev.com>
  */
-class Contest_Code_Checker_Loader {
+class CCC_Contest_Code_Checker_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

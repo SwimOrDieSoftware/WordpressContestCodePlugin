@@ -20,7 +20,7 @@
  * @subpackage Contest_Code_Checker/admin
  * @author     Mike de Libero <mikede@mde-dev.com>
  */
-class Contest_Code_Checker_Admin {
+class CCC_Contest_Code_Checker_Admin {
 
 	/**
 	 * The ID of this plugin.

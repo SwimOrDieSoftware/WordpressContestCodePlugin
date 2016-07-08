@@ -60,7 +60,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-contest-code-checker.php';
  */
 function run_contest_code_checker() {
 
-	$plugin = new Contest_Code_Checker();
+	$plugin = new CCC_Contest_Code_Checker();
 	$plugin->run();
 
 }

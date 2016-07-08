@@ -27,7 +27,7 @@
  * @subpackage Contest_Code_Checker/includes
  * @author     Mike de Libero <mikede@mde-dev.com>
  */
-class Contest_Code_Checker {
+class CCC_Contest_Code_Checker {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -126,7 +126,7 @@ class Contest_Code_Checker {
 		 */
 		require_once $pluginPath . 'public/class-contest-code-checker-public.php';
 
-		$this->loader = new Contest_Code_Checker_Loader();
+		$this->loader = new CCC_Contest_Code_Checker_Loader();
 
 	}
 
@@ -141,7 +141,7 @@ class Contest_Code_Checker {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Contest_Code_Checker_i18n();
+		$plugin_i18n = new CCC_Contest_Code_Checker_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -167,7 +167,7 @@ class Contest_Code_Checker {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Contest_Code_Checker_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new CCC_Contest_Code_Checker_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

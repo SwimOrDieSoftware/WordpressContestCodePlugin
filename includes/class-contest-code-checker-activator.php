@@ -20,7 +20,7 @@
  * @subpackage Contest_Code_Checker/includes
  * @author     Mike de Libero <mikede@mde-dev.com>
  */
-class Contest_Code_Checker_Activator {
+class CCC_Contest_Code_Checker_Activator {
 
 	/**
 	 * Short Description. (use period)
