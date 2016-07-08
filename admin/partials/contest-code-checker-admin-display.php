@@ -44,7 +44,7 @@ class CCC_Contest_Code_Checker_Admin_Displays {
     $contestants_table->prepare_items();
   ?>
     <div class="wrap">
-      <h1><?php _e("Contest Codes", "contest-code"); ?></h1>
+      <h1><?php _e("Contestants", "contest-code"); ?></h1>
       <div id="contestantExportContainer">
           <a href="<?php echo admin_url('admin.php?page=contest-code-contestants&ccc-action=contest-code-export-winners'); ?>" class="button action"><?php _e('Export Winners', 'contest-code'); ?></a>
           <a href="<?php echo admin_url('admin.php?page=contest-code-contestants&ccc-action=contest-code-export'); ?>" class="button action"><?php _e('Export All', 'contest-code'); ?></a>
