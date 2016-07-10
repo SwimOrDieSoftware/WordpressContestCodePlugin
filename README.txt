@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Contest Code Checker ===
 Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
