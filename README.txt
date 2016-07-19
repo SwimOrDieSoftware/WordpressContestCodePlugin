@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
 Tested up to: 4.5.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,7 @@ A plugin to allow for people to enter in a contest code and see if they won a pr
 This plugin was created for people who have contest codes on a physical or electronic product that are tied to a prize. The user who receives the contest code can go to a page or post and enter in their name, email and code and get back if they have won or lost. 
 
 The following capabilies exist:
+
 * User-facing form to check contest codes
 * Admin area to manage contest codes with the ability to import codes
 * Admin area to view contestants, also export contestants
@@ -46,6 +47,9 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.0.1 = 
+* Added options and functionality to email winners with their prize information
 
 = 1.0.0 =
 * Initial release

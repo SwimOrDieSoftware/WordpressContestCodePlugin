@@ -193,6 +193,7 @@ class CCC_Contest_Code_Checker_Public {
 						$code->set_has_been_used(true);
 
 						if($code->get_prize() != "") {
+							$this->notify_winner($customer, $code);
 							return $this->display_winning_message($code);
 						}
 					}
@@ -267,5 +268,28 @@ class CCC_Contest_Code_Checker_Public {
 
 	private function display_winning_message($code) {
 		return $this->display->winning_code_entered($code);
+	}
+
+	/**
+	 * If the option is enabled to notify the winner via email about their prize then an email is sent 
+	 * to the winner. 
+	 * 
+	 * @param CCC_Contestant $customer A contestant object
+	 * @param CCC_Contest_Codes $code  A contest code object 
+	 * @since 1.0.1
+	 * 
+	 */
+	private function notify_winner($customer, $code) {
+		if(get_option("ccc_email_winner") == "Y") {
+			$body = get_option("ccc_email_winner_body");
+
+			if(!empty($body)) {
+				$body .= "\r\n\r\n";
+			}
+
+			$body .= $code->get_prize_information();
+
+			wp_mail($customer->get_email(), get_option("ccc_email_winner_subject"), $body);
+		}
 	}
 }

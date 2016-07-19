@@ -177,6 +177,24 @@ class CCC_Contest_Code_Checker_Admin {
 											 "ccc_options",
 											 "contest_code_checker_options");
 
+		add_settings_field("ccc_email_winner", 
+											__("Email winners with prize information", "contest-code"), 
+											array($this, "display_email_winner_field"), 
+											"ccc_options", 
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_email_winner_subject", 
+											__("Winner email subject", "contest-code"), 
+											array($this, "display_email_winner_subject_field"), 
+											"ccc_options", 
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_email_winner_body", 
+											__("Beginning of winner email", "contest-code"), 
+											array($this, "display_email_winner_body_field"), 
+											"ccc_options", 
+											"contest_code_checker_options");
+
 		add_settings_field("ccc_text_winning",
 											 __("Text for When Someone Wins", "contest-code"),
 											 array($this, "display_text_winning_field"),
@@ -197,6 +215,9 @@ class CCC_Contest_Code_Checker_Admin {
 
 		register_setting("contest_code_checker_options", "ccc_start_date");
 		register_setting("contest_code_checker_options", "ccc_end_date");
+		register_setting("contest_code_checker_options", "ccc_email_winner");
+		register_setting("contest_code_checker_options", "ccc_email_winner_body");
+		register_setting("contest_code_checker_options", "ccc_email_winner_subject");
 		register_setting("contest_code_checker_options", "ccc_text_winning");
 		register_setting("contest_code_checker_options", "ccc_text_losing");
 		register_setting("contest_code_checker_options", "ccc_contest_not_running");
@@ -263,6 +284,39 @@ class CCC_Contest_Code_Checker_Admin {
 		?>
 			<input type="text" name="ccc_end_date" id="ccc_end_date" value="<?php echo esc_attr(get_option("ccc_end_date")); ?>" />
 		<?php
+	}
+
+	/**
+	 *  Displays the email the winner setting field
+	 *
+	 * @since 1.0.1
+	 */
+	public function display_email_winner_field($args) {
+		?>
+			<input type="checkbox" name="ccc_email_winner" id="ccc_email_winner" value="Y" <?php echo (get_option("ccc_email_winner") == "Y") ? "checked=\"checked\"" : ""; ?>/> 
+		<?php
+	}
+
+	/**
+	 *  Displays the winner email subject setting field
+	 *
+	 * @since 1.0
+	 */
+	public function display_email_winner_subject_field($args) {
+		?>
+			<input type="text" name="ccc_email_winner_subject" id="ccc_email_winner_subject" value="<?php echo esc_attr(get_option("ccc_email_winner_subject")); ?>" class="large-text" />
+		<?php
+	}
+	
+	/**
+	 *  Displays the winner email body text setting field
+	 *
+	 * @since 1.0
+	 */
+	public function display_email_winner_body_field($args) {
+		?>
+			<textarea name="ccc_email_winner_body" id="ccc_email_winner_body" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_email_winner_body")); ?></textarea>
+		<?
 	}
 
 	/**

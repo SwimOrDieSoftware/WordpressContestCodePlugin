@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the Contest Code Checker package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Contest Code Checker 1.0.0\n"
+"Project-Id-Version: Contest Code Checker 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/"
 "WordpressContestCodePlugin\n"
-"POT-Creation-Date: 2016-07-08 03:48:28+00:00\n"
+"POT-Creation-Date: 2016-07-19 23:54:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#. #-#-#-#-#  contest-code.pot (Contest Code Checker 1.0.0)  #-#-#-#-#
+#. #-#-#-#-#  contest-code.pot (Contest Code Checker 1.0.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/class-contest-code-checker-admin.php:132
 #: admin/class-contest-code-checker-admin.php:133
@@ -24,6 +24,7 @@ msgstr ""
 #: admin/class-contest-code-checker-admin.php:140
 #: admin/contestants/class-contestants-table.php:62
 #: admin/contestants/class-contestants-table.php:63
+#: admin/partials/contest-code-checker-admin-display.php:47
 #: includes/class-contest-code-checker.php:266
 msgid "Contestants"
 msgstr ""
@@ -32,7 +33,6 @@ msgstr ""
 #: admin/class-contest-code-checker-admin.php:147
 #: admin/contest_codes/class-contest-codes-table.php:63
 #: admin/partials/contest-code-checker-admin-display.php:29
-#: admin/partials/contest-code-checker-admin-display.php:47
 #: includes/class-contest-code-checker.php:249
 #: includes/class-contest-code-checker.php:253
 msgid "Contest Codes"
@@ -58,14 +58,26 @@ msgid "End date of contest"
 msgstr ""
 
 #: admin/class-contest-code-checker-admin.php:181
-msgid "Text for When Someone Wins"
+msgid "Email winners with prize information"
 msgstr ""
 
 #: admin/class-contest-code-checker-admin.php:187
-msgid "Text for When Someone Loses"
+msgid "Winner email subject"
 msgstr ""
 
 #: admin/class-contest-code-checker-admin.php:193
+msgid "Beginning of winner email"
+msgstr ""
+
+#: admin/class-contest-code-checker-admin.php:199
+msgid "Text for When Someone Wins"
+msgstr ""
+
+#: admin/class-contest-code-checker-admin.php:205
+msgid "Text for When Someone Loses"
+msgstr ""
+
+#: admin/class-contest-code-checker-admin.php:211
 msgid "Text for when the contest is not currently running"
 msgstr ""
 
@@ -216,11 +228,8 @@ msgstr ""
 msgid "You have entered a winner!"
 msgstr ""
 
-#. #-#-#-#-#  contest-code.pot (Contest Code Checker 1.0.0)  #-#-#-#-#
 #. Plugin URI of the plugin/theme
-#. #-#-#-#-#  contest-code.pot (Contest Code Checker 1.0.0)  #-#-#-#-#
-#. Author URI of the plugin/theme
-msgid "http://www.swimordiesoftware.com"
+msgid "https://wordpress.org/plugins/contest-code-checker/"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -231,4 +240,8 @@ msgstr ""
 
 #. Author of the plugin/theme
 msgid "Swim or Die Software"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.swimordiesoftware.com"
 msgstr ""
