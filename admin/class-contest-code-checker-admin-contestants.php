@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * The admin-specific functionality for managing contestants
@@ -55,7 +55,7 @@ class CCC_Contest_Code_Checker_Admin_Contestants {
 	}
 
 	/**
-	 * Displays the contestants list 
+	 * Displays the contestants list
 	 */
   	public function display_contestants() {
     	$this->display->contestant_listings();
@@ -74,7 +74,7 @@ class CCC_Contest_Code_Checker_Admin_Contestants {
 
   	/**
   	 * Handles deleting of multiple contestants
-  	 * 
+  	 *
   	 * @since 1.0.0
   	 */
   	private function bulk_delete_contestants() {
@@ -87,7 +87,7 @@ class CCC_Contest_Code_Checker_Admin_Contestants {
 	    	foreach($ids as $id) {
 	      		$c = new CCC_Contestant($id);
 	      		$c->delete();
-	    	} 
+	    	}
   		}
   	}
 }

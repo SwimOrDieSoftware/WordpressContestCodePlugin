@@ -17,7 +17,7 @@ class CCC_Contest_Code_Checker_Public_Displays {
 
 	/**
 	 * Returns the initial contest form that is displayed on the front-end
-	 * 
+	 *
 	 * @return string The HTML for the form
 	 */
 	public function contest_form() {
@@ -108,7 +108,21 @@ class CCC_Contest_Code_Checker_Public_Displays {
 			<?php
 				}
 
-				echo "<p>".$code->get_prize_information()."</p>";
+				$additional_prize_info = "<p>".$code->get_prize_information()."</p>";
+				// Check to see if a generic prize information should be used...
+				$args = array(
+						'post_type'	=> "ccc_prizes",
+						"meta_key"	=> "ccc_prize_codes",
+						"meta_value" => $code->get_prize(),
+						"meta_compare" => "=",
+					);
+				$generic_prize = new WP_Query($args);
+				if ( $generic_prize->have_posts() ) {
+					$generic_prize->the_post();
+					$additional_prize_info = apply_filters( 'the_content', get_the_content() );
+				}
+
+				echo $additional_prize_info;
 			?>
 		</div>
 	<?php

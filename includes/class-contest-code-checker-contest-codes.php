@@ -26,14 +26,14 @@ class CCC_Contest_Codes {
 
 
   	/**
-   	 * The contest code ID 
+   	 * The contest code ID
 	 *
 	 * @since 1.0.0
    	 */
   	public $ID = 0;
 
 	/**
-	 * The actual contest code 
+	 * The actual contest code
 	 *
 	 * @since 1.0.0
 	 */
@@ -54,7 +54,7 @@ class CCC_Contest_Codes {
 	public $prize;
 
 	/**
-	 * The prize information for the code, if any 
+	 * The prize information for the code, if any
 	 *
 	 * @since 1.0.0
 	 */
@@ -101,7 +101,7 @@ class CCC_Contest_Codes {
 	}
 
 	/**
-	 * Gets the information populated for a given contest code 
+	 * Gets the information populated for a given contest code
 	 *
 	 * @since 1.0.0
 	 * @param  object $contest_code The Contest Code object
@@ -126,7 +126,7 @@ class CCC_Contest_Codes {
 			$this->$key = $value;
 		}
 
-		$this->hasBeenUsed = get_post_meta($this->ID, "ccc_has_been_used", true);
+		$this->hasBeenUsed = boolval( get_post_meta( $this->ID, "ccc_has_been_used", true ) );
 		$this->prize = get_post_meta($this->ID, "ccc_prize", true);
 		$this->prizeInformation = get_post_meta($this->ID, "ccc_prize_information", true);
 
@@ -135,7 +135,7 @@ class CCC_Contest_Codes {
 	}
 
 	/**
-	 * Saves an existing contest code 
+	 * Saves an existing contest code
 	 *
 	 * @since 1.0.0
 	 * @var array $data Array of the attributes for the contest code
@@ -144,20 +144,20 @@ class CCC_Contest_Codes {
 	public function save($data = array()) {
 
 		$default_values = array(
-			"post_type"		=> $this->post_type, 
+			"post_type"		=> $this->post_type,
 			"post_status"	=> $this->post_status,
 			"post_title"	=> $this->code,
 			"ID" 			=> $this->ID,
 		);
-		
+
 		$args = wp_parse_args($data, $default_values);
-		
+
 		$id = wp_insert_post($args, true);
 
 		$contest_code = WP_Post::get_instance($id);
 		$this->set_has_been_used($data['hasBeenUsed']);
 
-		if ( ! add_post_meta( $id, 'ccc_prize', $data['prize'], true ) ) { 
+		if ( ! add_post_meta( $id, 'ccc_prize', $data['prize'], true ) ) {
 			update_post_meta( $id, 'ccc_prize', $data['prize'] );
 		}
 
@@ -169,8 +169,8 @@ class CCC_Contest_Codes {
 	}
 
 	/**
-	 * Deletes a given contest code and its related meta fields 
-	 * 
+	 * Deletes a given contest code and its related meta fields
+	 *
 	 * @since 1.0.0
 	 */
 	public function delete() {
@@ -192,8 +192,8 @@ class CCC_Contest_Codes {
 		return $this->ID;
 	}
 
-	/** 
-	 * Get the contest code 
+	/**
+	 * Get the contest code
 	 *
 	 * @since 1.0.0
 	 * @return the string of the contest code for this specific object
@@ -206,7 +206,7 @@ class CCC_Contest_Codes {
 	}
 
 	/**
-	 * Gets the prize for this contest code 
+	 * Gets the prize for this contest code
 	 *
 	 * @since 1.0.0
 	 * @return string The prize for the current contest code, could be empty if there is no prize
@@ -226,8 +226,9 @@ class CCC_Contest_Codes {
 	 * @return boolean Returns true if the contest code has been used, false otherwise
 	 */
 	public function get_has_been_used() {
+
 		if(!isset($this->hasBeenUsed)) {
-			$this->hasBeenUsed = get_post_meta($this->ID, "ccc_has_been_used", true);
+			$this->hasBeenUsed = boolval( get_post_meta($this->ID, "ccc_has_been_used", true) );
 		} elseif(!is_bool($this->hasBeenUsed)) {
 			$this->hasBeenUsed = false;
 		}
@@ -246,7 +247,7 @@ class CCC_Contest_Codes {
 	public function set_has_been_used($beenUsed) {
 		$beenUsed = boolval($beenUsed);
 
-		if ( ! add_post_meta( $this->ID, 'ccc_has_been_used', $beenUsed, true ) ) { 
+		if ( ! add_post_meta( $this->ID, 'ccc_has_been_used', $beenUsed, true ) ) {
 			update_post_meta( $this->ID, 'ccc_has_been_used', $beenUsed );
 		}
 	}

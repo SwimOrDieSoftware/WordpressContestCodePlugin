@@ -53,15 +53,15 @@ class CCC_Contest_Code_Checker_Admin {
 		$this->version = $version;
 		$this->load_dependencies();
 
-		if(isset($_GET['page']) && 
-		   (strToLower($_GET['page']) == 'contest-code-contestants') && 
+		if(isset($_GET['page']) &&
+		   (strToLower($_GET['page']) == 'contest-code-contestants') &&
 		   (strtolower($_GET['ccc-action']) == "contest-code-export-winners")) {
 		   	add_action('init', array($this, "export_winners"));
 		}
 
 
-		if(isset($_GET['page']) && 
-		   (strToLower($_GET['page']) == 'contest-code-contestants') && 
+		if(isset($_GET['page']) &&
+		   (strToLower($_GET['page']) == 'contest-code-contestants') &&
 		   (strtolower($_GET['ccc-action']) == "contest-code-export")) {
 		   	add_action('init', array($this, "export_all"));
 		}
@@ -84,6 +84,12 @@ class CCC_Contest_Code_Checker_Admin {
 											$this->version,
 											'all' );
 
+		wp_enqueue_style( 'jquery_multi_select_css',
+								plugin_dir_url( __FILE__ ) . 'js/multi-select/css/multi-select.css',
+								array(),
+								$this->version,
+								'all' );
+
 	}
 
 	/**
@@ -98,6 +104,11 @@ class CCC_Contest_Code_Checker_Admin {
 											 $this->version,
 											 false );
 
+		wp_enqueue_script( "contest-code-multiselect",
+											 plugin_dir_url( __FILE__ ) . 'js/multi-select/jquery.multi-select.js',
+											 array( 'jquery' ),
+											 $this->version,
+											 false );
 	}
 
 	/**
@@ -149,10 +160,17 @@ class CCC_Contest_Code_Checker_Admin {
 			"contest-codes",
 			array($this, "show_contest_codes_page"));
 
+		add_submenu_page( "contest-code-checker",
+			__("Generic Prizes", "contest-code"),
+			__("Generic Prizes", "contest-code"),
+			$this->get_required_capability(),
+			"contest-code-prizes",
+			array($this, "show_prizes_page") );
+
 		add_submenu_page("contest-code-checker",
 			__("Import Contest Codes", "contest-code"),
 			__("Import Contest Codes", "contest-code"),
-			$this->get_required_capability(), 
+			$this->get_required_capability(),
 			"contest-codes-import",
 			array($this, "show_import_contest_codes_page"));
 	}
@@ -162,7 +180,7 @@ class CCC_Contest_Code_Checker_Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	public function wireup_settings() {
+	 public function wireup_settings() {
 		add_settings_section("contest_code_checker_options", __("General Settings", "contest-code"), null, "ccc_options");
 
 		add_settings_field("ccc_start_date",
@@ -171,28 +189,34 @@ class CCC_Contest_Code_Checker_Admin {
 											 "ccc_options",
 											 "contest_code_checker_options");
 
-		add_settings_field("ccc_end_date",
+		 add_settings_field("ccc_end_date",
 											 __("End date of contest", "contest-code"),
 											 array($this, "display_end_date_field"),
 											 "ccc_options",
 											 "contest_code_checker_options");
 
-		add_settings_field("ccc_email_winner", 
-											__("Email winners with prize information", "contest-code"), 
-											array($this, "display_email_winner_field"), 
-											"ccc_options", 
+		 add_settings_field("ccc_display_popover",
+											__("Display pop-over with prize information", "contest-code"),
+											array($this, "display_popover_field"),
+											"ccc_options",
 											"contest_code_checker_options");
 
-		add_settings_field("ccc_email_winner_subject", 
-											__("Winner email subject", "contest-code"), 
-											array($this, "display_email_winner_subject_field"), 
-											"ccc_options", 
+		add_settings_field("ccc_email_winner",
+											__("Email winners with prize information", "contest-code"),
+											array($this, "display_email_winner_field"),
+											"ccc_options",
 											"contest_code_checker_options");
 
-		add_settings_field("ccc_email_winner_body", 
-											__("Beginning of winner email", "contest-code"), 
-											array($this, "display_email_winner_body_field"), 
-											"ccc_options", 
+		add_settings_field("ccc_email_winner_subject",
+											__("Winner email subject", "contest-code"),
+											array($this, "display_email_winner_subject_field"),
+											"ccc_options",
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_email_winner_body",
+											__("Beginning of winner email", "contest-code"),
+											array($this, "display_email_winner_body_field"),
+											"ccc_options",
 											"contest_code_checker_options");
 
 		add_settings_field("ccc_text_winning",
@@ -207,7 +231,7 @@ class CCC_Contest_Code_Checker_Admin {
 											 "ccc_options",
 											 "contest_code_checker_options");
 
-		add_settings_field("ccc_contest_not_running", 
+		add_settings_field("ccc_contest_not_running",
 											__("Text for when the contest is not currently running", "contest-code"),
 											array($this, "display_contest_not_running_field"),
 											"ccc_options",
@@ -215,6 +239,7 @@ class CCC_Contest_Code_Checker_Admin {
 
 		register_setting("contest_code_checker_options", "ccc_start_date");
 		register_setting("contest_code_checker_options", "ccc_end_date");
+		register_setting("contest_code_checker_options", "ccc_display_popover");
 		register_setting("contest_code_checker_options", "ccc_email_winner");
 		register_setting("contest_code_checker_options", "ccc_email_winner_body");
 		register_setting("contest_code_checker_options", "ccc_email_winner_subject");
@@ -248,19 +273,27 @@ class CCC_Contest_Code_Checker_Admin {
 		$contest_codes->display_import_form();
 	}
 
+	public function show_prizes_page() {
+		$prizes = new CCC_Contest_Code_Checker_Admin_Prizes();
+		$prizes->display_page();
+	}
+
 	/**
 	 * [load_dependencies description]
 	 * @return [type] [description]
 	 */
 	private function load_dependencies() {
-		$baseDir = plugin_dir_path( dirname( __FILE__ ) );
+		$base_dir = plugin_dir_path( dirname( __FILE__ ) );
 
-		require_once $baseDir . 'admin/partials/contest-code-checker-admin-settings.php';
-		require_once $baseDir . 'admin/partials/contest-code-checker-admin-display.php';
-		require_once $baseDir . 'admin/contest_codes/class-contest-codes-table.php';
-		require_once $baseDir . 'admin/contestants/class-contestants-table.php';
-		require_once $baseDir . 'admin/class-contest-code-checker-admin-contest-codes.php';
-		require_once $baseDir . 'admin/class-contest-code-checker-admin-contestants.php';
+		require_once $base_dir . 'admin/partials/contest-code-checker-admin-settings.php';
+		require_once $base_dir . 'admin/partials/contest-code-checker-admin-display.php';
+		require_once $base_dir . 'admin/partials/contest-code-checker-admin-display-prizes.php';
+		require_once $base_dir . 'admin/contest_codes/class-contest-codes-table.php';
+		require_once $base_dir . 'admin/contestants/class-contestants-table.php';
+		require_once $base_dir . 'admin/prizes/class-prizes-table.php';
+		require_once $base_dir . 'admin/class-contest-code-checker-admin-contest-codes.php';
+		require_once $base_dir . 'admin/class-contest-code-checker-admin-contestants.php';
+		require_once $base_dir . 'admin/class-contest-code-checker-admin-prizes.php';
 
 	}
 
@@ -291,9 +324,20 @@ class CCC_Contest_Code_Checker_Admin {
 	 *
 	 * @since 1.0.1
 	 */
+	public function display_popover_field($args) {
+		?>
+			<input type="checkbox" name="ccc_display_popover" id="ccc_display_popover" value="Y" <?php echo (get_option("ccc_display_popover") == "Y") ? "checked=\"checked\"" : ""; ?>/>
+		<?php
+	}
+
+	/**
+	 *  Displays the email the winner setting field
+	 *
+	 * @since 1.0.1
+	 */
 	public function display_email_winner_field($args) {
 		?>
-			<input type="checkbox" name="ccc_email_winner" id="ccc_email_winner" value="Y" <?php echo (get_option("ccc_email_winner") == "Y") ? "checked=\"checked\"" : ""; ?>/> 
+			<input type="checkbox" name="ccc_email_winner" id="ccc_email_winner" value="Y" <?php echo (get_option("ccc_email_winner") == "Y") ? "checked=\"checked\"" : ""; ?>/>
 		<?php
 	}
 
@@ -307,7 +351,7 @@ class CCC_Contest_Code_Checker_Admin {
 			<input type="text" name="ccc_email_winner_subject" id="ccc_email_winner_subject" value="<?php echo esc_attr(get_option("ccc_email_winner_subject")); ?>" class="large-text" />
 		<?php
 	}
-	
+
 	/**
 	 *  Displays the winner email body text setting field
 	 *
@@ -344,11 +388,11 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_contest_not_running_field($args) {
 		?>
 			<textarea name="ccc_contest_not_running" id="ccc_contest_not_running" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_contest_not_running")); ?></textarea>
-		<?	
+		<?
 	}
 
 	/**
-	 * Exports all of the winners 
+	 * Exports all of the winners
 	 * @return A CSV with the winner information
 	 * @since 1.0.0
 	 */
@@ -376,7 +420,7 @@ class CCC_Contest_Code_Checker_Admin {
 				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
 				$cc = new CCC_Contest_Codes($ccId);
 				if(!empty($cc->get_prize())) {
-					$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";	
+					$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";
 					$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
 					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\"\r\n";
 				}
@@ -412,15 +456,15 @@ class CCC_Contest_Code_Checker_Admin {
 				$contestants->the_post();
 				$id = $contestants->post->ID;
 				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
-				$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";	
+				$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";
 				$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
 				if($ccId > 0) {
 					$cc = new CCC_Contest_Codes($ccId);
-					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",";	
+					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",";
 				} else {
 					$csv .= "\"\",\"\",";
 				}
-				
+
 				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"\r\n";
 			}
 		}

@@ -91,6 +91,7 @@ class CCC_Contest_Code_Checker_Public {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/contest-code-checker-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 
 	}
 
@@ -114,13 +115,14 @@ class CCC_Contest_Code_Checker_Public {
 		 */
 
 		wp_enqueue_script('jquery-validate', plugin_dir_url( __FILE__ ) . 'js/jquery.validate.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script( 'jquery-ui-dialog' );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/contest-code-checker-public.js', array( 'jquery', 'jquery-validate' ), $this->version, false );
 
 	}
 
 	/**
 	 * Shortcode handling functionl, will call the appropriate function depending on the step the short code is on
-	 * 
+	 *
 	 * @param  array $atts attributes that are specified in the shortcode
 	 * @return string       the output that should be displayed...
 	 */
@@ -136,19 +138,19 @@ class CCC_Contest_Code_Checker_Public {
 			if($action == "check_code") {
 				$output = $this->check_contest_code();
 			} else {
-				$output = $this->get_contest_code_form();	
-			}	
+				$output = $this->get_contest_code_form();
+			}
 		} else {
 			$output = $this->contest_has_not_started();
 		}
-		
-		
-		return $output;	
+
+
+		return $output;
 	}
 
 	/**
-	 * Returns the contest code form that allows users to enter in their information. 
-	 * 
+	 * Returns the contest code form that allows users to enter in their information.
+	 *
 	 * @return string The HTML for the form...
 	 */
 	private function get_contest_code_form() {
@@ -161,14 +163,14 @@ class CCC_Contest_Code_Checker_Public {
 	 * @return string The HTML for if the persond won or lost
 	 */
 	private function check_contest_code() {
-		global $wpdb; 
+		global $wpdb;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'contest_code_frontend_form' ) ) {
 			return $this->get_contest_code_form();
 		}
 
 		do_action("ccc_handle_contest_code_submission", $_POST);
-		
+
 		if(isset($_POST['contestants_code']) && !empty($_POST['contestants_code'])) {
 			$cc = trim(strtolower($_POST['contestants_code']));
 
@@ -178,13 +180,13 @@ class CCC_Contest_Code_Checker_Public {
 			if(count($codes) > 0) {
 				foreach ( $codes as $c ) {
 					$hasBeenUsed = get_post_meta($c->ID, "ccc_has_been_used", true);
-					if(!boolval($hasBeenUsed)) {	
+					if(!boolval($hasBeenUsed)) {
 						$customer = new CCC_Contestant();
 						$code = new CCC_Contest_Codes($c->ID);
 
 						$data = array(
 								"post_title" => $_POST['contestants_name'],
-								"contestCodeID" => $c->ID, 
+								"contestCodeID" => $c->ID,
 								"email" => $_POST['contestants_email'],
 							);
 						$customer->save($data);
@@ -209,10 +211,10 @@ class CCC_Contest_Code_Checker_Public {
 				$customer->save($data);
 			}
 
-		} 
+		}
 
 		return $this->display_losing_message();
-		
+
 	}
 
 	/**
@@ -241,7 +243,7 @@ class CCC_Contest_Code_Checker_Public {
 		}
 
 		if(empty($end_date)) {
-			$start_date = strtotime($start_date);	
+			$start_date = strtotime($start_date);
 
 			return ($start_date <= $now);
 		}
@@ -254,7 +256,7 @@ class CCC_Contest_Code_Checker_Public {
 
 		$start_date = strtotime(get_option("ccc_start_date"));
 		$end_date = strtotime(get_option("ccc_end_date"));
-		
+
 		if(($start_date <= $now) && ($end_date >= $now)) {
 			return true;
 		}
@@ -271,13 +273,13 @@ class CCC_Contest_Code_Checker_Public {
 	}
 
 	/**
-	 * If the option is enabled to notify the winner via email about their prize then an email is sent 
-	 * to the winner. 
-	 * 
+	 * If the option is enabled to notify the winner via email about their prize then an email is sent
+	 * to the winner.
+	 *
 	 * @param CCC_Contestant $customer A contestant object
-	 * @param CCC_Contest_Codes $code  A contest code object 
+	 * @param CCC_Contest_Codes $code  A contest code object
 	 * @since 1.0.1
-	 * 
+	 *
 	 */
 	private function notify_winner($customer, $code) {
 		if(get_option("ccc_email_winner") == "Y") {

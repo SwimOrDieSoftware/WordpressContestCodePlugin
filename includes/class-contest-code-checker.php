@@ -108,6 +108,7 @@ class CCC_Contest_Code_Checker {
 		/* Data Classes */
 		require_once $pluginPath . 'includes/class-contest-code-checker-contest-codes.php';
 		require_once $pluginPath . 'includes/class-contest-code-checker-contestant.php';
+		require_once $pluginPath . 'includes/class-contest-code-checker-prizes.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -269,9 +270,21 @@ class CCC_Contest_Code_Checker {
 					"name"					=> "Contestants",
 					"has_archive"			=> false,
 					"hierarchical"			=> false,
-					"singular_name"			=> "ccc_code",
 					"name"					=> "Contest Codes",
 					"supports"				=> array("title"),
+				));
+
+		register_post_type("ccc_prizes",
+			array(
+					"public" 				=> false,
+					"show_in_menu"			=> false,
+					"label" 				=> __("Prizes", "contest-code"),
+					"show_in_nav_menus"		=> false,
+					"singular_name"			=> "ccc_prize",
+					"name"					=> "Prizes",
+					"has_archive"			=> false,
+					"hierarchical"			=> false,
+					"supports"				=> array("title", "description"),
 				));
 	}
 
