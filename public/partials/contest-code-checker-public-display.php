@@ -50,10 +50,18 @@ class CCC_Contest_Code_Checker_Public_Displays {
 				</p>
 
 				<p class="ccc_form_submit">
-					<input type="submit" value="<?php echo esc_html($submitPrizeLabel); ?>" />
+					<input type="submit" id="contest_code_checker_submit" value="<?php echo esc_html($submitPrizeLabel); ?>" />
 				</p>
 			</form>
 		</div>
+		<?php if( get_option( "ccc_display_popover" ) === 'Y' ) { ?>
+			<div id="ccc-dialog" title="<?php _e('Contest Results', 'contest-code'); ?>">
+				<div id="ccc-dialog-message">
+					
+				</div>
+			</div>
+		<?php } ?>
+
 	<?php
 		$output = ob_get_clean();
 		return $output;
@@ -77,22 +85,50 @@ class CCC_Contest_Code_Checker_Public_Displays {
 		return ob_get_clean();
 	}
 
+	public function get_losing_message() {
+		$message = "<p>".__("The code you entered was not a winner.", "contest-code")."</p>";
+
+		if(get_option("ccc_text_losing") != "") {
+			$message = get_option("ccc_text_losing");
+		}
+
+		return $message;
+	}
+
 	public function losing_code_entered() {
 		ob_start();
 	?>
 		<div id="contest_code_checker_container">
-		<?php
-			if(get_option("ccc_text_losing") != "") {
-				echo get_option("ccc_text_losing");
-			} else {
-		?>
-				<p><?php _e("The code you entered was not a winner.", "contest-code"); ?></p>
-		<?php
-			}
-		?>
+			<?php echo $this->get_losing_message(); ?>
 		</div>
 	<?php
 		return ob_get_clean();
+	}
+
+	public function get_winning_message($code) {
+		$message = "<p>" . __("You have entered a winner!", "contest-code") . "</p>";
+
+		if(get_option("ccc_text_winning") != "") {
+			$message = get_option("ccc_text_winning");
+		}
+
+		$additional_prize_info = "<p>" . $code->get_prize_information() . "</p>";
+		// Check to see if a generic prize information should be used...
+		$args = array(
+				'post_type'	=> "ccc_prizes",
+				"meta_key"	=> "ccc_prize_codes",
+				"meta_value" => $code->get_prize(),
+				"meta_compare" => "=",
+			);
+		$generic_prize = new WP_Query($args);
+		if ( $generic_prize->have_posts() ) {
+			$generic_prize->the_post();
+			$additional_prize_info = apply_filters( 'the_content', get_the_content() );
+		}
+
+		$message .= $additional_prize_info;
+
+		return $message;
 	}
 
 	public function winning_code_entered($code) {
@@ -100,29 +136,7 @@ class CCC_Contest_Code_Checker_Public_Displays {
 	?>
 		<div id="contest_code_checker_container">
 			<?php
-				if(get_option("ccc_text_winning") != "") {
-					echo get_option("ccc_text_winning");
-				} else {
-			?>
-					<p><?php _e("You have entered a winner!", "contest-code"); ?></p>
-			<?php
-				}
-
-				$additional_prize_info = "<p>".$code->get_prize_information()."</p>";
-				// Check to see if a generic prize information should be used...
-				$args = array(
-						'post_type'	=> "ccc_prizes",
-						"meta_key"	=> "ccc_prize_codes",
-						"meta_value" => $code->get_prize(),
-						"meta_compare" => "=",
-					);
-				$generic_prize = new WP_Query($args);
-				if ( $generic_prize->have_posts() ) {
-					$generic_prize->the_post();
-					$additional_prize_info = apply_filters( 'the_content', get_the_content() );
-				}
-
-				echo $additional_prize_info;
+				echo $this->get_winning_message($code);
 			?>
 		</div>
 	<?php

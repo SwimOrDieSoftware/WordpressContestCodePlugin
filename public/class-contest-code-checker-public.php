@@ -116,8 +116,23 @@ class CCC_Contest_Code_Checker_Public {
 
 		wp_enqueue_script('jquery-validate', plugin_dir_url( __FILE__ ) . 'js/jquery.validate.min.js', array('jquery'), $this->version, false);
 		wp_enqueue_script( 'jquery-ui-dialog' );
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/contest-code-checker-public.js', array( 'jquery', 'jquery-validate' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name,
+							plugin_dir_url( __FILE__ ) . 'js/contest-code-checker-public.js',
+							array( 'jquery', 'jquery-validate' ),
+							$this->version,
+							false );
 
+		if( get_option( "ccc_display_popover" ) === 'Y' ) {
+
+			wp_enqueue_script( "contest-code-checker-ajax",
+								plugin_dir_url( __FILE__ ) . 'js/contest-code-checker-ajax.js',
+								array( 'jquery' ),
+								$this->version,
+								false );
+			wp_localize_script( "contest-code-checker-ajax",
+								'contest_code_data',
+								array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+		}
 	}
 
 	/**
@@ -158,12 +173,40 @@ class CCC_Contest_Code_Checker_Public {
 	}
 
 	/**
+	 * Handles the ajax request for checking the contest code
+	 * @return string JSON response with either winning or losing codes
+	 */
+	public function ajax_handle_contest_code() {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'contest_code_frontend_form' ) ) {
+			echo '{"msg": "Invalid nonce"}';
+			die();
+		}
+
+		do_action("ccc_handle_contest_code_submission", $_POST);
+
+		$is_winner = $this->is_winning_code( $_POST['contestants_code'],
+											 $_POST['contestants_name'],
+											 $_POST['contestants_email'] );
+
+
+		$message = $this->display->get_losing_message();
+
+		if( $is_winner['is_winner'] ) {
+			$message = $this->display->get_winning_message( $is_winner['code'] );
+		}
+
+		$result = array("is_winner" => $is_winner['is_winner'], "message" => $message);
+
+		echo json_encode($result);
+		die();
+	}
+
+	/**
 	 * Checks the contest code and records the information
 	 *
 	 * @return string The HTML for if the persond won or lost
 	 */
 	private function check_contest_code() {
-		global $wpdb;
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'contest_code_frontend_form' ) ) {
 			return $this->get_contest_code_form();
@@ -171,8 +214,25 @@ class CCC_Contest_Code_Checker_Public {
 
 		do_action("ccc_handle_contest_code_submission", $_POST);
 
-		if(isset($_POST['contestants_code']) && !empty($_POST['contestants_code'])) {
-			$cc = trim(strtolower($_POST['contestants_code']));
+		$is_winner = $this->is_winning_code( $_POST['contestants_code'],
+											 $_POST['contestants_name'],
+											 $_POST['contestants_email'] );
+
+		if( $is_winner['is_winner'] ) {
+			return $this->display_winning_message($is_winner['code']);
+		}
+
+		return $this->display_losing_message();
+
+	}
+
+	private function is_winning_code( $constestants_code, $contestants_name, $contestants_email ) {
+		global $wpdb;
+
+		$result = array("is_winner" => false, "code" => null);
+
+		if(isset( $constestants_code ) && !empty( $constestants_code )) {
+			$cc = trim(strtolower( $constestants_code ) );
 
 			// Try to find the contest code....
 			$sql = "SELECT ID FROM ".$wpdb->posts." WHERE post_title = %s AND post_type='ccc_codes'";
@@ -180,14 +240,14 @@ class CCC_Contest_Code_Checker_Public {
 			if(count($codes) > 0) {
 				foreach ( $codes as $c ) {
 					$hasBeenUsed = get_post_meta($c->ID, "ccc_has_been_used", true);
-					if(!boolval($hasBeenUsed)) {
+					if( ! boolval($hasBeenUsed) ) {
 						$customer = new CCC_Contestant();
 						$code = new CCC_Contest_Codes($c->ID);
 
 						$data = array(
-								"post_title" => $_POST['contestants_name'],
+								"post_title" => $contestants_name,
 								"contestCodeID" => $c->ID,
-								"email" => $_POST['contestants_email'],
+								"email" => $contestants_email,
 							);
 						$customer->save($data);
 
@@ -196,7 +256,9 @@ class CCC_Contest_Code_Checker_Public {
 
 						if($code->get_prize() != "") {
 							$this->notify_winner($customer, $code);
-							return $this->display_winning_message($code);
+							$result['is_winner'] = true;
+							$result['code'] = $code;
+							return $result;
 						}
 					}
 				}
@@ -204,8 +266,8 @@ class CCC_Contest_Code_Checker_Public {
 				$customer = new CCC_Contestant();
 
 				$data = array(
-						"post_title" => $_POST['contestants_name'],
-						 "email" => $_POST['contestants_email'],
+						"post_title" => $contestants_name,
+						 "email" => $contestants_email,
 						 "invalidPrizeCode" => $cc,
 					);
 				$customer->save($data);
@@ -213,8 +275,7 @@ class CCC_Contest_Code_Checker_Public {
 
 		}
 
-		return $this->display_losing_message();
-
+		return $result;
 	}
 
 	/**
