@@ -65,6 +65,12 @@ class CCC_Contest_Code_Checker_Admin {
 		   (strtolower($_GET['ccc-action']) == "contest-code-export")) {
 		   	add_action('init', array($this, "export_all"));
 		}
+
+		if(isset($_GET['page']) &&
+		   (strToLower($_GET['page']) == 'contest-codes') &&
+		   (strtolower($_GET['ccc-action']) == "contest-code-export")) {
+		   	add_action('init', array($this, "export_contest_codes"));
+		}
 	}
 
 	/**
@@ -189,17 +195,23 @@ class CCC_Contest_Code_Checker_Admin {
 											 "ccc_options",
 											 "contest_code_checker_options");
 
-		 add_settings_field("ccc_end_date",
+		add_settings_field("ccc_end_date",
 											 __("End date of contest", "contest-code"),
 											 array($this, "display_end_date_field"),
 											 "ccc_options",
 											 "contest_code_checker_options");
 
-		 add_settings_field("ccc_display_popover",
+		add_settings_field("ccc_display_popover",
 											__("Display pop-over with prize information", "contest-code"),
 											array($this, "display_popover_field"),
 											"ccc_options",
 											"contest_code_checker_options");
+
+		add_settings_field("ccc_pop_up_width",
+										   __("Pop-over Dimensions", "contest-code"),
+										   array($this, "display_popover_dimensions_field"),
+										   "ccc_options",
+										   "contest_code_checker_options");
 
 		add_settings_field("ccc_email_winner",
 											__("Email winners with prize information", "contest-code"),
@@ -231,6 +243,18 @@ class CCC_Contest_Code_Checker_Admin {
 											 "ccc_options",
 											 "contest_code_checker_options");
 
+		 add_settings_field("ccc_text_invalid",
+ 											 __("Text for Invalid Contest Code", "contest-code"),
+ 											 array($this, "display_text_invalid_code_field"),
+ 											 "ccc_options",
+ 											 "contest_code_checker_options");
+
+		 add_settings_field("ccc_text_already_used",
+ 											 __("Text for Already Used Contest Code", "contest-code"),
+ 											 array($this, "display_text_already_used_code_field"),
+ 											 "ccc_options",
+ 											 "contest_code_checker_options");
+
 		add_settings_field("ccc_contest_not_running",
 											__("Text for when the contest is not currently running", "contest-code"),
 											array($this, "display_contest_not_running_field"),
@@ -240,11 +264,15 @@ class CCC_Contest_Code_Checker_Admin {
 		register_setting("contest_code_checker_options", "ccc_start_date");
 		register_setting("contest_code_checker_options", "ccc_end_date");
 		register_setting("contest_code_checker_options", "ccc_display_popover");
+		register_setting("contest_code_checker_options", "ccc_pop_up_width");
+		register_setting("contest_code_checker_options", "ccc_pop_up_height");
 		register_setting("contest_code_checker_options", "ccc_email_winner");
 		register_setting("contest_code_checker_options", "ccc_email_winner_body");
 		register_setting("contest_code_checker_options", "ccc_email_winner_subject");
 		register_setting("contest_code_checker_options", "ccc_text_winning");
 		register_setting("contest_code_checker_options", "ccc_text_losing");
+		register_setting("contest_code_checker_options", "ccc_text_invalid");
+		register_setting("contest_code_checker_options", "ccc_text_already_used");
 		register_setting("contest_code_checker_options", "ccc_contest_not_running");
 	}
 
@@ -331,6 +359,17 @@ class CCC_Contest_Code_Checker_Admin {
 	}
 
 	/**
+	 *  Displays the pop-over dimensions inputs
+	 *
+	 * @since 1.0.3
+	 */
+	public function display_popover_dimensions_field($args) {
+	?>
+		<label>Width: <input type="text" name="ccc_pop_up_width" id="ccc_pop_up_width" value="<?php echo esc_attr(get_option("ccc_pop_up_width")); ?>" size="5" />pixels</label> -
+		<label>Height: <input type="text" name="ccc_pop_up_height" id="ccc_pop_up_height" value="<?php echo esc_attr(get_option("ccc_pop_up_height")); ?>" size="5" />pixels</label>
+	<?php
+	}
+	/**
 	 *  Displays the email the winner setting field
 	 *
 	 * @since 1.0.1
@@ -385,6 +424,28 @@ class CCC_Contest_Code_Checker_Admin {
 		<?
 	}
 
+	/**
+	 *  Displays the invalid contest code text setting field
+	 *
+	 * @since 1.0.3
+	 */
+	public function display_text_invalid_code_field($args) {
+		?>
+			<textarea name="ccc_text_invalid" id="ccc_text_invalid" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_invalid")); ?></textarea>
+		<?
+	}
+
+	/**
+	 *  Displays the already used contest code text setting field
+	 *
+	 * @since 1.0.3
+	 */
+	public function display_text_already_used_code_field($args) {
+		?>
+			<textarea name="ccc_text_already_used" id="ccc_text_already_used" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_already_used")); ?></textarea>
+		<?
+	}
+
 	public function display_contest_not_running_field($args) {
 		?>
 			<textarea name="ccc_contest_not_running" id="ccc_contest_not_running" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_contest_not_running")); ?></textarea>
@@ -404,13 +465,14 @@ class CCC_Contest_Code_Checker_Admin {
 		header('Content-Description: Contest Code Checker Export');
 		header("Content-Type: application/vnd.ms-excel", true);
 		header('Content-Disposition: attachment; filename="ccc_winners.csv"');
-		$csv = "\"Name\",\"Email\",\"Contest Code\",\"Prize\"\r\n";
+		$csv = "\"First Name\",\"Last Name\",\"Email\",\"Contest Code\",\"Prize\"\r\n";
 
 		$args = array(
 				'post_type'	=> "ccc_contestants",
 				"meta_key"	=> "ccc_contest_code_id",
 				"meta_value" => "0",
 				"meta_compare" => ">",
+				'posts_per_page' => -1,
 			);
 		$contestants = new WP_Query($args);
 		if ( $contestants->have_posts() ) {
@@ -420,7 +482,8 @@ class CCC_Contest_Code_Checker_Admin {
 				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
 				$cc = new CCC_Contest_Codes($ccId);
 				if(!empty($cc->get_prize())) {
-					$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";
+					$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
+					$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
 					$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
 					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\"\r\n";
 				}
@@ -445,10 +508,11 @@ class CCC_Contest_Code_Checker_Admin {
 		header('Content-Description: Contest Code Checker Export');
 		header("Content-Type: application/vnd.ms-excel", true);
 		header('Content-Disposition: attachment; filename="ccc_contestants.csv"');
-		$csv = "\"Name\",\"Email\",\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
+		$csv = "\"First Name\",\"Last Name\",\"Email\",\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
 
 		$args = array(
-				'post_type'	=> "ccc_contestants"
+				'post_type'	=> "ccc_contestants",
+				"posts_per_page" => -1,
 			);
 		$contestants = new WP_Query($args);
 		if ( $contestants->have_posts() ) {
@@ -456,7 +520,8 @@ class CCC_Contest_Code_Checker_Admin {
 				$contestants->the_post();
 				$id = $contestants->post->ID;
 				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
-				$csv .= "\"".str_replace("\"", "\"\"",get_the_title())."\",";
+				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
+				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
 				$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
 				if($ccId > 0) {
 					$cc = new CCC_Contest_Codes($ccId);
@@ -466,6 +531,44 @@ class CCC_Contest_Code_Checker_Admin {
 				}
 
 				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"\r\n";
+			}
+		}
+
+		echo $csv;
+		wp_reset_postdata();
+		exit;
+	}
+
+	/**
+	 * Exports all of the contest codes
+	 * @return A CSV with the contest code information
+	 * @since 1.0.0
+	 */
+	public function export_contest_codes() {
+		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
+			// IE Bug in download name workaround
+			ini_set( 'zlib.output_compression','Off' );
+		}
+		header('Content-Description: Contest Code Checker Export');
+		header("Content-Type: application/vnd.ms-excel", true);
+		header('Content-Disposition: attachment; filename="ccc_contest_codes.csv"');
+		$csv = "\"Contest Code\",\"Prize Associated with Code\",\"Has code been used?\",\"Prize Details\"\r\n";
+
+		$args = array(
+				'post_type'	=> 'ccc_codes',
+				'posts_per_page' => -1,
+			);
+		$codes = new WP_Query($args);
+		if ( $codes->have_posts() ) {
+			while ( $codes->have_posts() ) {
+				$codes->the_post();
+				$id = $codes->post->ID;
+				$cc = new CCC_Contest_Codes($id);
+				$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_code() ) . "\",";
+				$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_prize() ) . "\",";
+				$csv .= "\"" . ( $cc->get_has_been_used() ? "Yes" : "No" ) . "\",";
+				$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_prize_information() ) . "\"";
+				$csv .= "\r\n";
 			}
 		}
 

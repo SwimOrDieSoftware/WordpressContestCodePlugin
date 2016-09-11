@@ -30,7 +30,7 @@ class CCC_Contestants_Table extends WP_List_Table {
 	 * @var int
 	 * @since 1.0
 	 */
-	public $per_page = 30;
+	public $per_page = 10;
 
 	/**
 	 * Number of contest codes found
@@ -103,7 +103,7 @@ class CCC_Contestants_Table extends WP_List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'title';
+		return 'first_name';
 	}
 
 	/**
@@ -127,11 +127,11 @@ class CCC_Contestants_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Returns how the data should be rendered for the contest code 
+	 * Returns how the data should be rendered for the contest code
 	 * @param  object $code The data for the current contest code
 	 * @return string       The title for the column and how it should be rendered with actions
 	 */
-	public function column_title( $item ) {
+	public function column_first_name( $item ) {
 		$contestant = get_post( $item['ID'] );
 		$row_actions  = array();
 
@@ -139,7 +139,7 @@ class CCC_Contestants_Table extends WP_List_Table {
 
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'ccc-action' => 'delete-contestant', 'contestant' => $contestant->ID ) ), 'ccc_contestant_nonce' ) ) . '">' . __( 'Delete', 'contest-code' ) . '</a>';
 
-		return esc_html(stripslashes( $item['title'] )) . $this->row_actions( $row_actions );
+		return esc_html(stripslashes( $item['first_name'] )) . $this->row_actions( $row_actions );
 	}
 
 	public function column_contest_code($item) {
@@ -184,7 +184,8 @@ class CCC_Contestants_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'         	=> '<input type="checkbox" />',
-			'title'         => __( 'Contestant', 'contest-code' ),
+			'first_name'    => __( 'First Name', 'contest-code' ),
+			'last_name'		=> __( 'Last Name', 'contest-code' ),
       		'email'         => __( 'Email Address', 'contest-code' ),
 			'contest_code'  => __( 'Contest Code', 'contest-code' ),
 			'invalid_code'	=> __( 'Invalid Code', 'contest-code' ),
@@ -203,7 +204,8 @@ class CCC_Contestants_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'title'        	=> array( 'title', true ),
+			'first_name'   	=> array( 'first_name', true ),
+			'last_name'   	=> array( 'last_name', true ),
 			'email'        	=> array( 'email', true ),
 			'contest_code'  => array( 'contest_code', false ),
 		);
@@ -282,6 +284,8 @@ class CCC_Contestants_Table extends WP_List_Table {
 			$data[] = array(
 				"ID"			=> $contestants->post->ID,
 				"title" 		=> get_the_title($contestants->post->ID),
+				"first_name"	=> get_post_meta($contestants->post->ID, "ccc_contestant_first_name", true),
+				"last_name"		=> get_post_meta($contestants->post->ID, "ccc_contestant_last_name", true),
 				"email" 		=> get_post_meta($contestants->post->ID, "ccc_email", true),
 				"contest_code"	=> get_post_meta($contestants->post->ID, "ccc_contest_code_id", true),
 				"invalid_code" 	=> get_post_meta($contestants->post->ID, "ccc_invalid_contest_code", true),

@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
 Tested up to: 4.5.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,15 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.0.3 =
+* Small label changes on the front-end form
+* Added ability to export contest codes
+* Added the ability to delete all contest codes
+* Added the option to show a message if the code is invalid, if nothing is specified the losing message will be displayed
+* Added the option to show a message if the code is already used, if nothing is specified the losing message will be displayed
+* Added the ability to specify the pop-up width and height in pixels
+* Split the contestant's name into two fields first and last
 
 = 1.0.2 =
 * Added the ability to create generic prize information that could be associated with multiple prizes

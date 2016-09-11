@@ -30,7 +30,7 @@ class CCC_Contest_Codes_Table extends WP_List_Table {
 	 * @var int
 	 * @since 1.0
 	 */
-	public $per_page = 30;
+	public $per_page = 10;
 
 	/**
 	 * Number of contest codes found
@@ -126,7 +126,7 @@ class CCC_Contest_Codes_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Returns how the data should be rendered for the contest code 
+	 * Returns how the data should be rendered for the contest code
 	 * @param  object $code The data for the current contest code
 	 * @return string       The title for the column and how it should be rendered with actions
 	 */

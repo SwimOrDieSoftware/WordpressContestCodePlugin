@@ -129,9 +129,23 @@ class CCC_Contest_Code_Checker_Public {
 								array( 'jquery' ),
 								$this->version,
 								false );
+
+			$popup_width = 0;
+			$popup_height = 0;
+
+			if( get_option( 'ccc_pop_up_width' ) != 0 ) {
+				$popup_width = get_option( 'ccc_pop_up_width' );
+			}
+
+			if( get_option( 'ccc_pop_up_height' ) != 0 ) {
+				$popup_height = get_option( 'ccc_pop_up_height' );
+			}
+
 			wp_localize_script( "contest-code-checker-ajax",
 								'contest_code_data',
-								array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+								array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
+								 	   'popup_width' => $popup_width,
+									   'popup_height' => $popup_height ) );
 		}
 	}
 
@@ -185,7 +199,8 @@ class CCC_Contest_Code_Checker_Public {
 		do_action("ccc_handle_contest_code_submission", $_POST);
 
 		$is_winner = $this->is_winning_code( $_POST['contestants_code'],
-											 $_POST['contestants_name'],
+											 $_POST['contestants_first_name'],
+											 $_POST['contestants_last_name'],
 											 $_POST['contestants_email'] );
 
 
@@ -193,6 +208,14 @@ class CCC_Contest_Code_Checker_Public {
 
 		if( $is_winner['is_winner'] ) {
 			$message = $this->display->get_winning_message( $is_winner['code'] );
+		}
+
+		if( $is_winner['is_invalid'] ) {
+			$message = $this->display->get_invalid_code_message();
+		}
+
+		if( $is_winner['already_used'] ) {
+			$message = $this->display->get_already_used_code_message();
 		}
 
 		$result = array("is_winner" => $is_winner['is_winner'], "message" => $message);
@@ -216,20 +239,29 @@ class CCC_Contest_Code_Checker_Public {
 
 		$is_winner = $this->is_winning_code( $_POST['contestants_code'],
 											 $_POST['contestants_name'],
+											 $_POST['contestants_last_name'],
 											 $_POST['contestants_email'] );
 
 		if( $is_winner['is_winner'] ) {
 			return $this->display_winning_message($is_winner['code']);
 		}
 
+		if( $is_winner['is_invalid'] ) {
+			return $this->display_invalid_message();
+		}
+
+		if( $is_winner['already_used'] ) {
+			return $this->display_already_used_message();
+		}
+
 		return $this->display_losing_message();
 
 	}
 
-	private function is_winning_code( $constestants_code, $contestants_name, $contestants_email ) {
+	private function is_winning_code( $constestants_code, $contestants_first_name, $contestants_last_name, $contestants_email ) {
 		global $wpdb;
 
-		$result = array("is_winner" => false, "code" => null);
+		$result = array("is_winner" => false, "code" => null, "is_invalid" => false, "already_used" => false);
 
 		if(isset( $constestants_code ) && !empty( $constestants_code )) {
 			$cc = trim(strtolower( $constestants_code ) );
@@ -245,7 +277,9 @@ class CCC_Contest_Code_Checker_Public {
 						$code = new CCC_Contest_Codes($c->ID);
 
 						$data = array(
-								"post_title" => $contestants_name,
+								"post_title" => $contestants_first_name . ' ' . $contestants_last_name,
+								"first_name" => $contestants_first_name,
+								"last_name" => $contestants_last_name,
 								"contestCodeID" => $c->ID,
 								"email" => $contestants_email,
 							);
@@ -262,16 +296,21 @@ class CCC_Contest_Code_Checker_Public {
 						}
 					}
 				}
-			} else {
-				$customer = new CCC_Contestant();
 
-				$data = array(
-						"post_title" => $contestants_name,
-						 "email" => $contestants_email,
-						 "invalidPrizeCode" => $cc,
-					);
-				$customer->save($data);
+				$result['already_used'] = true;
+			} else {
+				$result['is_invalid'] = true;
 			}
+
+			$customer = new CCC_Contestant();
+			$data = array(
+					"post_title" => $contestants_first_name . ' ' . $contestants_last_name,
+					"first_name" => $contestants_first_name,
+					"last_name" => $contestants_last_name,
+					 "email" => $contestants_email,
+					 "invalidPrizeCode" => $cc,
+				);
+			$customer->save($data);
 
 		}
 
@@ -327,6 +366,14 @@ class CCC_Contest_Code_Checker_Public {
 
 	private function display_losing_message() {
 		return $this->display->losing_code_entered();
+	}
+
+	private function display_invalid_message() {
+		return $this->display->invalid_code_entered();
+	}
+
+	private function display_already_used_message() {
+		return $this->display->already_used_code_entered();
 	}
 
 	private function display_winning_message($code) {

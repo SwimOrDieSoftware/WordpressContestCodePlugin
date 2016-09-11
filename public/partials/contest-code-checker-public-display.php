@@ -24,8 +24,9 @@ class CCC_Contest_Code_Checker_Public_Displays {
 		$output = "";
 		ob_start();
 
-		$nameLabel = apply_filters("ccc_form_name_label_text", __("Your Name", "contest-code"));
-		$emailLabel = apply_filters("ccc_form_email_label_text", __("Your Email", "contest-code"));
+		$first_name_label = apply_filters("ccc_form_first_name_label_text", __("First Name", "contest-code"));
+		$last_name_label = apply_filters("ccc_form_last_name_label_text", __("Last Name", "contest-code"));
+		$emailLabel = apply_filters("ccc_form_email_label_text", __("Email", "contest-code"));
 		$prizeCodeLabel = apply_filters("ccc_form_prize_code_label_text", __("Prize Code", "contest-code"));
 		$submitPrizeLabel = apply_filters("ccc_form_submit_prize_label_text", __("Submit Prize", "contest-code"));
 	?>
@@ -35,8 +36,13 @@ class CCC_Contest_Code_Checker_Public_Displays {
 				<?php wp_nonce_field("contest_code_frontend_form"); ?>
 
 				<p class="ccc_form_element">
-					<label for="contestants_name"><?php echo esc_html($nameLabel); ?></label>
+					<label for="contestants_name"><?php echo esc_html($first_name_label); ?></label>
 					<input type="text" name="contestants_name" id="contestants_name" required />
+				</p>
+
+				<p class="ccc_form_element">
+					<label for="contestants_last_name"><?php echo esc_html($last_name_label); ?></label>
+					<input type="text" name="contestants_last_name" id="contestants_last_name" required />
 				</p>
 
 				<p class="ccc_form_element">
@@ -55,9 +61,9 @@ class CCC_Contest_Code_Checker_Public_Displays {
 			</form>
 		</div>
 		<?php if( get_option( "ccc_display_popover" ) === 'Y' ) { ?>
-			<div id="ccc-dialog" title="<?php _e('Contest Results', 'contest-code'); ?>">
+			<div id="ccc-dialog">
 				<div id="ccc-dialog-message">
-					
+
 				</div>
 			</div>
 		<?php } ?>
@@ -85,6 +91,26 @@ class CCC_Contest_Code_Checker_Public_Displays {
 		return ob_get_clean();
 	}
 
+	public function get_invalid_code_message() {
+		$message = $this->get_losing_message();
+
+		if( get_option("ccc_text_invalid") != '' ) {
+			$message = get_option("ccc_text_invalid");
+		}
+
+		return $message;
+	}
+
+	public function get_already_used_code_message() {
+		$message = $this->get_losing_message();
+
+		if( get_option("ccc_text_already_used") != '' ) {
+			$message = get_option("ccc_text_already_used");
+		}
+
+		return $message;
+	}
+
 	public function get_losing_message() {
 		$message = "<p>".__("The code you entered was not a winner.", "contest-code")."</p>";
 
@@ -93,6 +119,26 @@ class CCC_Contest_Code_Checker_Public_Displays {
 		}
 
 		return $message;
+	}
+
+	public function invalid_code_entered() {
+		ob_start();
+	?>
+		<div id="contest_code_checker_container">
+			<?php echo $this->get_invalid_code_message(); ?>
+		</div>
+	<?php
+		return ob_get_clean();
+	}
+
+	public function already_used_code_entered() {
+		ob_start();
+	?>
+		<div id="contest_code_checker_container">
+			<?php echo $this->get_already_used_code_message(); ?>
+		</div>
+	<?php
+		return ob_get_clean();
 	}
 
 	public function losing_code_entered() {

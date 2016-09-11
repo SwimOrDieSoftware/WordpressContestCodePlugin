@@ -30,7 +30,7 @@ class CCC_Prizes_Table extends WP_List_Table {
 	 * @var int
 	 * @since 1.0
 	 */
-	public $per_page = 30;
+	public $per_page = 10;
 
 	/**
 	 * Number of generic prizes found

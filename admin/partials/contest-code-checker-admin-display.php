@@ -27,6 +27,10 @@ class CCC_Contest_Code_Checker_Admin_Displays {
   ?>
     <div class="wrap">
       <h1><?php _e("Contest Codes", "contest-code"); ?><a href="<?php echo esc_url( add_query_arg( array( 'ccc-action' => 'add-contest-code' ) ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'contest-codes' ); ?></a></h1>
+	  <div id="contestantExportContainer">
+		  <a href="<?php echo admin_url('admin.php?page=contest-codes&ccc-action=confirm-delete-contest-codes'); ?>" class="button action"><?php _e('Delete All Contest Codes', 'contest-code'); ?></a>
+          <a href="<?php echo admin_url('admin.php?page=contest-codes&ccc-action=contest-code-export'); ?>" class="button action"><?php _e('Export Contest Codes', 'contest-code'); ?></a>
+      </div>
       <form id="ccc-contest-codes-filter" method="get" action="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>">
         <div></div>
         <input type="hidden" name="page" value="contest-codes" />
@@ -54,7 +58,7 @@ class CCC_Contest_Code_Checker_Admin_Displays {
         <input type="hidden" name="page" value="contest-code-contestants" />
         <input type="hidden" name="ccc-action" value="bulk" />
         <?php $contestants_table->views() ?>
-        
+
         <?php $contestants_table->display() ?>
       </form>
     </div>
@@ -66,7 +70,7 @@ class CCC_Contest_Code_Checker_Admin_Displays {
     <div class="wrap">
       <h2><?php if($code->get_ID() > 0) :
           _e("Edit Contest Code", "contest-code");
-        else: 
+        else:
           _e("Add Contest Code", "contest-code");
         endif; ?> - <a href="<?php echo admin_url( 'admin.php?page=contest-codes' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'rsvp-pro-plugin' ); ?></a>
       </h2>
@@ -94,7 +98,7 @@ class CCC_Contest_Code_Checker_Admin_Displays {
                 <label for="hasBeenUsed"><?php _e( 'Has this code been used?', 'contest-code' ); ?>:</label>
               </th>
               <td>
-                <input type="checkbox" name="hasBeenUsed" id="hasBeenUsed" value="Y" 
+                <input type="checkbox" name="hasBeenUsed" id="hasBeenUsed" value="Y"
                   <?php echo ($code->get_has_been_used()) ? "checked=\"checked\"" : "";?> />
               </td>
             </tr>
@@ -119,6 +123,24 @@ class CCC_Contest_Code_Checker_Admin_Displays {
     </div>
   <?php
   }
+
+	public function contest_code_confirm_delete() {
+ 	?>
+		<div class="wrap">
+			<form id="contest-code-delete-all-form" action="<?php echo admin_url('admin.php?page=contest-codes'); ?>" method="post">
+				<p>
+					<?php _e("Are you sure you want to delete all contest codes?", "contest-code"); ?>
+				</p>
+				<p class="submit">
+		          <input type="hidden" name="page" value="contest-codes" />
+		          <input type="hidden" name="ccc-action" value="delete_all_contest_codes" />
+		          <input type="hidden" name="contest-code-delete-nonce" value="<?php echo wp_create_nonce("contest-code-delete-form"); ?>" />
+		          <input type="submit" value="<?php _e("Delete All Contest Codes", "contest-code"); ?>" class="button-primary" />
+		        </p>
+			</form>
+		</div>
+	<?php
+	}
 
   public function contest_code_import_form() {
   ?>

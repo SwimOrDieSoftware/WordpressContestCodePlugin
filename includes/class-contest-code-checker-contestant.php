@@ -26,31 +26,45 @@ class CCC_Contestant {
 
 
   	/**
-   	 * The contest code ID 
+   	 * The contest code ID
 	 *
 	 * @since 1.0.0
    	 */
   	private $ID = 0;
 
 	/**
-	 * The contestant's name
+	 * The contestant's whole name
 	 *
 	 * @since 1.0.0
 	 */
 	private $name;
 
+	/**
+	 * The contestant's first name
+	 *
+	 * @since 1.0.0
+	 */
+	private $first_name;
 
 	/**
-	 * The contest code ID 
-	 * 
+	 * The contestant's last name
+	 *
+	 * @since 1.0.0
+	 */
+	private $last_name;
+
+
+	/**
+	 * The contest code ID
+	 *
 	 * @var int
 	 * @since 1.0.0
 	 */
 	private $codeID;
 
 	/**
-	 * The code object if the code ID is defined 
-	 * 
+	 * The code object if the code ID is defined
+	 *
 	 * @var object CCC_Contest_Codes
 	 * @since 1.0.0
 	 */
@@ -111,7 +125,7 @@ class CCC_Contestant {
 	}
 
 	/**
-	 * Gets the information populated for a given contestant 
+	 * Gets the information populated for a given contestant
 	 *
 	 * @since 1.0.0
 	 * @param  object $contest_code The Contest Code object
@@ -144,13 +158,15 @@ class CCC_Contestant {
 		}
 		$this->email = get_post_meta($this->ID, "ccc_email");
 		$this->invalidCode = get_post_meta($this->ID, "ccc_invalid_contest_code");
+		$this->first_name = get_post_meta($this->ID, "ccc_contestant_first_name");
+		$this->last_name = get_post_meta($this->ID, "ccc_contestant_last_name");
 
 		return true;
 
 	}
 
 	/**
-	 * Saves an existing contest code 
+	 * Saves an existing contest code
 	 *
 	 * @since 1.0.0
 	 * @var array $data Array of the attributes for the contest code
@@ -159,23 +175,23 @@ class CCC_Contestant {
 	public function save($data = array()) {
 
 		$default_values = array(
-			"post_type"		=> $this->post_type, 
+			"post_type"		=> $this->post_type,
 			"post_status"	=> $this->post_status,
 			"post_title"	=> $this->name,
 			"ID" 			=> $this->ID,
 		);
-		
+
 		$args = wp_parse_args($data, $default_values);
-		
+
 		$id = wp_insert_post($args, true);
 
 		$contestant = WP_Post::get_instance($id);
 
-		if ( ! add_post_meta( $id, 'ccc_contest_code_id', $data['contestCodeID'], true ) ) { 
+		if ( ! add_post_meta( $id, 'ccc_contest_code_id', $data['contestCodeID'], true ) ) {
 			update_post_meta( $id, 'ccc_contest_code_id', $data['contestCodeID'] );
 		}
 
-		if ( ! add_post_meta( $id, 'ccc_email', $data['email'], true ) ) { 
+		if ( ! add_post_meta( $id, 'ccc_email', $data['email'], true ) ) {
 			update_post_meta( $id, 'ccc_email', $data['email'] );
 		}
 
@@ -183,12 +199,20 @@ class CCC_Contestant {
 			update_post_meta( $id, "ccc_invalid_contest_code", $data['invalidPrizeCode'] );
 		}
 
+		if ( ! add_post_meta( $id, "ccc_contestant_first_name", $data['first_name'], true ) ) {
+			update_post_meta( $id, "ccc_contestant_first_name", $data['first_name'] );
+		}
+
+		if ( ! add_post_meta( $id, "ccc_contestant_last_name", $data['last_name'], true ) ) {
+			update_post_meta( $id, "ccc_contestant_last_name", $data['last_name'] );
+		}
+
 		return $this->populate_data($contestant);
 	}
 
 	/**
-	 * Deletes a given contest code and its related meta fields 
-	 * 
+	 * Deletes a given contest code and its related meta fields
+	 *
 	 * @since 1.0.0
 	 */
 	public function delete() {
@@ -198,9 +222,11 @@ class CCC_Contestant {
 			delete_post_meta($this->ID, "ccc_contest_code_id");
 			delete_post_meta($this->ID, "ccc_email");
 			delete_post_meta($this->ID, "ccc_invalid_contest_code");
+			delete_post_meta($this->ID, "ccc_contestant_first_name");
+			delete_post_meta($this->ID, "ccc_contestant_last_name");
 			wp_delete_post($this->ID, true);
 
-			// Reset the has been used flag on the cotest code 
+			// Reset the has been used flag on the cotest code
 			$code = new CCC_Contest_Codes($contestCodeID);
 			$code->set_has_been_used(false);
 		}
@@ -216,17 +242,30 @@ class CCC_Contestant {
 		return $this->ID;
 	}
 
-	/** 
-	 * Get the contestant's name
+	/**
+	 * Get the contestant's first name
 	 *
 	 * @since 1.0.0
-	 * @return the string of the contestant's name
+	 * @return the string of the contestant's first name
 	 */
-	public function get_name() {
-		if(!isset($this->name)) {
-			$this->name = get_the_title($this->ID);
+	public function get_first_name() {
+		if(!isset($this->first_name)) {
+			$this->first_name = get_post_meta($this->ID, "ccc_contestant_first_name", true);
 		}
-		return $this->name;
+		return $this->first_name;
+	}
+
+	/**
+	 * Get the contestant's last name
+	 *
+	 * @since 1.0.0
+	 * @return the string of the contestant's last name
+	 */
+	public function get_last_name() {
+		if(!isset($this->last_name)) {
+			$this->last_name = get_post_meta($this->ID, "ccc_contestant_last_name", true);
+		}
+		return $this->last_name;
 	}
 
 	/**
@@ -258,8 +297,8 @@ class CCC_Contestant {
 	}
 
 	/**
-	 * Returns the email address associated with this user 
-	 * 
+	 * Returns the email address associated with this user
+	 *
 	 * @return string the contestant's email address
 	 */
 	public function get_email() {
@@ -272,7 +311,7 @@ class CCC_Contestant {
 
 	/**
 	 * If a user enter in a contest code that is not in our database it will be available here
-	 * 
+	 *
 	 * @return string The invalid contest code that the user entered
 	 */
 	public function get_invalid_code() {
