@@ -397,7 +397,22 @@ class CCC_Contest_Code_Checker_Public {
 				$body .= "\r\n\r\n";
 			}
 
-			$body .= $code->get_prize_information();
+			$additional_prize_info = "<p>" . $code->get_prize_information() . "</p>";
+			// Check to see if a generic prize information should be used...
+			$args = array(
+					'post_type'	=> "ccc_prizes",
+					"meta_key"	=> "ccc_prize_codes",
+					"meta_value" => $code->get_prize(),
+					"meta_compare" => "=",
+				);
+			$generic_prize = new WP_Query($args);
+			if ( $generic_prize->have_posts() ) {
+				$generic_prize->the_post();
+				$additional_prize_info = apply_filters( 'the_content', get_the_content() );
+			}
+
+
+			$body .= $additional_prize_info;
 
 			wp_mail($customer->get_email(), get_option("ccc_email_winner_subject"), $body);
 		}

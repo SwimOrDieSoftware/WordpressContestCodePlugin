@@ -2,8 +2,8 @@
 Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
-Tested up to: 4.5.2
-Stable tag: 1.0.3
+Tested up to: 4.6.1
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.0.4 =
+* Included the generic prize information in the email to winners
 
 = 1.0.3 =
 * Small label changes on the front-end form
