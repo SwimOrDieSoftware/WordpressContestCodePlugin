@@ -414,7 +414,9 @@ class CCC_Contest_Code_Checker_Public {
 
 			$body .= $additional_prize_info;
 
-			wp_mail($customer->get_email(), get_option("ccc_email_winner_subject"), $body);
+			$headers = array('Content-Type: text/html; charset=UTF-8');
+
+			wp_mail($customer->get_email(), get_option("ccc_email_winner_subject"), $body, $headers);
 		}
 	}
 }
