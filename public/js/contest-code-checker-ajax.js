@@ -6,16 +6,15 @@
 			event.preventDefault();
 
 			var data = {
-				action: 'submit_contest_code',
-				contestants_first_name: $("#contestants_name").val(),
-				contestants_last_name: $("#contestants_last_name").val(),
-				contestants_email: $("#contestants_email").val(),
-				contestants_code: $("#contestants_code").val(),
-				_wpnonce: $("#_wpnonce").val(),
+				'action': 'submit_contest_code',
+				'contestants_first_name': $("#contestants_name").val(),
+				'contestants_last_name': $("#contestants_last_name").val(),
+				'contestants_email': $("#contestants_email").val(),
+				'contestants_code': $("#contestants_code").val(),
+				'_wpnonce': $("#_wpnonce").val(),
 			};
 
-			// the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
-	 		$.post(contest_code_data.ajaxurl, data, function(response) {
+	 		jQuery.post(contest_code_data.ajaxurl, data , function(response) {
 				var json = JSON.parse(response);
 				var popup_width = 'auto';
 				var popup_height = 'auto';
@@ -27,7 +26,6 @@
 				if(contest_code_data.popup_height > 0) {
 					popup_height = contest_code_data.popup_height;
 				}
-
 
 				$( "#ccc-dialog-message" ).html(json.message);
 				$( "#ccc-dialog" ).dialog({

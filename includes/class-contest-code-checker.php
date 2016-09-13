@@ -194,6 +194,7 @@ class CCC_Contest_Code_Checker {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'wp_ajax_submit_contest_code', $plugin_public, 'ajax_handle_contest_code' );
+		$this->loader->add_action( 'wp_ajax_nopriv_submit_contest_code', $plugin_public, 'ajax_handle_contest_code' );
 	}
 
 	/**

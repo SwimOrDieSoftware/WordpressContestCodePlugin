@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
 Tested up to: 4.6.1
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.0.6 =
+* Made it so even anonymous users can use the ajax calls
 
 = 1.0.5 =
 * Set email to winners to be text/html instead of a plain-text email
