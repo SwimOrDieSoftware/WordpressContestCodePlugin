@@ -188,6 +188,7 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
   			wp_verify_nonce($_REQUEST['contest-code-import-nonce'], "contest-code-import-form") &&
   			(count($_FILES) > 0) ) {
 
+			set_time_limit(0); // Set the time limit to forever to handle large files being imported...
       		require(plugin_dir_path( dirname( __FILE__ ) ).'includes/spreadsheet-reader/php-excel-reader/excel_reader2.php');
       		require(plugin_dir_path( dirname( __FILE__ ) ).'includes/spreadsheet-reader/SpreadsheetReader.php');
 
@@ -208,7 +209,7 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
 						$data['prizeInformation'] = $row[2];
 					}
 
-					$code->save($data);
+					$code->save($data, true);
 				} // if ((count($row)...
 			} // foreach($data as $row..
   		} // nonce check if-statement

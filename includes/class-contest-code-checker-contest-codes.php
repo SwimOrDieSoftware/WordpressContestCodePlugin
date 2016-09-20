@@ -139,9 +139,10 @@ class CCC_Contest_Codes {
 	 *
 	 * @since 1.0.0
 	 * @var array $data Array of the attributes for the contest code
+	 * @var bool  $dont_load_data A boolean telling the calling function to skip reloading the content after saving
 	 * @return mixed false if the ID isn't set for this object, otherwise the updated class
 	 */
-	public function save($data = array()) {
+	public function save($data = array(), $dont_load_data = false) {
 
 		$default_values = array(
 			"post_type"		=> $this->post_type,
@@ -165,6 +166,9 @@ class CCC_Contest_Codes {
 			update_post_meta( $id, "ccc_prize_information", $data['prizeInformation'] );
 		}
 
+		if( $dont_load_data ) {
+			return true;
+		}
 		return $this->populate_data($contest_code);
 	}
 
