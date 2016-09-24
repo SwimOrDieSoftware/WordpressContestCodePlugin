@@ -53,22 +53,25 @@ class CCC_Contest_Code_Checker_Admin {
 		$this->version = $version;
 		$this->load_dependencies();
 
-		if(isset($_GET['page']) &&
-		   (strToLower($_GET['page']) == 'contest-code-contestants') &&
-		   (strtolower($_GET['ccc-action']) == "contest-code-export-winners")) {
+		if( isset( $_GET['page'] ) &&
+		   (strToLower( $_GET['page'] ) == 'contest-code-contestants') &&
+		   isset( $_GET['ccc-action'] ) &&
+		   (strtolower( $_GET['ccc-action'] ) == "contest-code-export-winners")) {
 		   	add_action('init', array($this, "export_winners"));
 		}
 
 
-		if(isset($_GET['page']) &&
-		   (strToLower($_GET['page']) == 'contest-code-contestants') &&
-		   (strtolower($_GET['ccc-action']) == "contest-code-export")) {
+		if( isset( $_GET['page'] ) &&
+		   ( strToLower( $_GET['page'] ) == 'contest-code-contestants' ) &&
+		   isset( $_GET['ccc-action'] ) &&
+		   ( strtolower( $_GET['ccc-action'] ) == "contest-code-export" ) ) {
 		   	add_action('init', array($this, "export_all"));
 		}
 
-		if(isset($_GET['page']) &&
-		   (strToLower($_GET['page']) == 'contest-codes') &&
-		   (strtolower($_GET['ccc-action']) == "contest-code-export")) {
+		if( isset( $_GET['page'] ) &&
+		   ( strToLower( $_GET['page'] ) == 'contest-codes' ) &&
+		   isset( $_GET['ccc-action'] ) &&
+		   ( strtolower( $_GET['ccc-action'] ) == "contest-code-export" ) ) {
 		   	add_action('init', array($this, "export_contest_codes"));
 		}
 	}
@@ -545,6 +548,8 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function export_contest_codes() {
+		set_time_limit(0); // Set the time limit to forever to handle large number of contest codes from being exported
+
 		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
 			// IE Bug in download name workaround
 			ini_set( 'zlib.output_compression','Off' );

@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
 Tested up to: 4.6.1
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,10 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.0.8 =
+* Fixed a bug where if you entered a code that did not have a prize you would get a message saying the code was already used when it wasn't
+* Set the execution time limit for deleting and exporting of contest codes to be unlimited to allow for large number of contest codes
 
 = 1.0.7 =
 * Set the execution time limit for import files to be unlimited to allow for large contest codes to be imported

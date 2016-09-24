@@ -130,6 +130,7 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
 
 	private function delete_all_contest_codes() {
 		if( wp_verify_nonce( $_POST['contest-code-delete-nonce'], "contest-code-delete-form" ) ) {
+			set_time_limit(0); // Set the time limit to forever to handle large number of contest codes from being deleted
 			$args = array(
 					'post_type'	=> 'ccc_codes',
 					'posts_per_page' => -1,

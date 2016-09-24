@@ -292,12 +292,13 @@ class CCC_Contest_Code_Checker_Public {
 							$this->notify_winner($customer, $code);
 							$result['is_winner'] = true;
 							$result['code'] = $code;
+							$result['already_used'] = false;
 							return $result;
 						}
+					} else {
+						$result['already_used'] = true;
 					}
 				}
-
-				$result['already_used'] = true;
 			} else {
 				$result['is_invalid'] = true;
 			}
