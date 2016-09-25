@@ -129,20 +129,14 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
   	}
 
 	private function delete_all_contest_codes() {
+		global $wpdb;
+
 		if( wp_verify_nonce( $_POST['contest-code-delete-nonce'], "contest-code-delete-form" ) ) {
 			set_time_limit(0); // Set the time limit to forever to handle large number of contest codes from being deleted
-			$args = array(
-					'post_type'	=> 'ccc_codes',
-					'posts_per_page' => -1,
-				);
-			$codes = new WP_Query($args);
-			if ( $codes->have_posts() ) {
-				while ( $codes->have_posts() ) {
-					$codes->the_post();
-					$id = $codes->post->ID;
-					$code = new CCC_Contest_Codes($id);
-					$code->delete();
-				}
+			$codes = $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_type = 'ccc_codes'");
+			foreach($codes as $c) {
+				$code = new CCC_Contest_Codes($c->ID);
+				$code->delete();
 			}
 		}
 	}

@@ -187,7 +187,7 @@ class CCC_Contestant {
 
 		$contestant = WP_Post::get_instance($id);
 
-		if ( ! add_post_meta( $id, 'ccc_contest_code_id', $data['contestCodeID'], true ) ) {
+		if ( isset( $data['contestCodeID'] ) && ! add_post_meta( $id, 'ccc_contest_code_id', $data['contestCodeID'], true ) ) {
 			update_post_meta( $id, 'ccc_contest_code_id', $data['contestCodeID'] );
 		}
 
@@ -195,7 +195,7 @@ class CCC_Contestant {
 			update_post_meta( $id, 'ccc_email', $data['email'] );
 		}
 
-		if ( ! add_post_meta( $id, "ccc_invalid_contest_code", $data['invalidPrizeCode'], true ) ) {
+		if ( isset( $data['invalidPrizeCode'] ) && ! add_post_meta( $id, "ccc_invalid_contest_code", $data['invalidPrizeCode'], true ) ) {
 			update_post_meta( $id, "ccc_invalid_contest_code", $data['invalidPrizeCode'] );
 		}
 

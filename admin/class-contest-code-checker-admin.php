@@ -548,8 +548,9 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function export_contest_codes() {
+		global $wpdb;
 		set_time_limit(0); // Set the time limit to forever to handle large number of contest codes from being exported
-
+		ob_start();
 		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
 			// IE Bug in download name workaround
 			ini_set( 'zlib.output_compression','Off' );
@@ -557,28 +558,25 @@ class CCC_Contest_Code_Checker_Admin {
 		header('Content-Description: Contest Code Checker Export');
 		header("Content-Type: application/vnd.ms-excel", true);
 		header('Content-Disposition: attachment; filename="ccc_contest_codes.csv"');
-		$csv = "\"Contest Code\",\"Prize Associated with Code\",\"Has code been used?\",\"Prize Details\"\r\n";
+		echo "\"Contest Code\",\"Prize Associated with Code\",\"Has code been used?\",\"Prize Details\"\r\n";
 
-		$args = array(
-				'post_type'	=> 'ccc_codes',
-				'posts_per_page' => -1,
-			);
-		$codes = new WP_Query($args);
-		if ( $codes->have_posts() ) {
-			while ( $codes->have_posts() ) {
-				$codes->the_post();
-				$id = $codes->post->ID;
-				$cc = new CCC_Contest_Codes($id);
-				$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_code() ) . "\",";
-				$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_prize() ) . "\",";
-				$csv .= "\"" . ( $cc->get_has_been_used() ? "Yes" : "No" ) . "\",";
-				$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_prize_information() ) . "\"";
-				$csv .= "\r\n";
-			}
+		$codes = $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_type = 'ccc_codes'");
+		foreach($codes as $c) {
+			$id = $c->ID;
+			$cc = new CCC_Contest_Codes($id);
+			$csv = "\"" . str_replace( "\"", "\"\"", $cc->get_code() ) . "\",";
+			$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_prize() ) . "\",";
+			$csv .= "\"" . ( $cc->get_has_been_used() ? "Yes" : "No" ) . "\",";
+			$csv .= "\"" . str_replace( "\"", "\"\"", $cc->get_prize_information() ) . "\"";
+			$csv .= "\r\n";
+			echo $csv;
+			flush();
+			ob_flush();
+			unset($cc);
+			unset($csv);
+			gc_collect_cycles();
 		}
-
-		echo $csv;
-		wp_reset_postdata();
+		ob_end_flush();
 		exit;
 	}
 

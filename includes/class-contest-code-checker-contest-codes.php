@@ -93,39 +93,26 @@ class CCC_Contest_Codes {
 	 * @since 1.0.0
 	 */
 	public function __construct( $_id = false, $_args = array() ) {
-
-		$contest_code = WP_Post::get_instance( $_id );
-
-		return $this->populate_data( $contest_code );
-
+		return $this->populate_data( $_id );
 	}
 
 	/**
 	 * Gets the information populated for a given contest code
 	 *
 	 * @since 1.0.0
-	 * @param  object $contest_code The Contest Code object
+	 * @param  object $contest_code_id The Contest Code object ID
 	 * @return true               If the retrieval of the data was successful
 	 */
-	private function populate_data($contest_code) {
+	private function populate_data($contest_code_id) {
+		global $wpdb;
 
-		if(!is_object($contest_code)) {
+		$this->code = $wpdb->get_var( $wpdb->prepare( "SELECT post_title FROM $wpdb->posts WHERE ID = %d", $contest_code_id ) );
+
+		if( $this->code === '' ) {
 			return false;
 		}
 
-		if(!is_a($contest_code, "WP_Post")) {
-			return false;
-		}
-
-		if($this->post_type !== $contest_code->post_type) {
-			return false;
-		}
-
-		/* Load the values into the object properties */
-		foreach($contest_code as $key => $value) {
-			$this->$key = $value;
-		}
-
+		$this->ID = $contest_code_id;
 		$this->hasBeenUsed = boolval( get_post_meta( $this->ID, "ccc_has_been_used", true ) );
 		$this->prize = get_post_meta($this->ID, "ccc_prize", true);
 		$this->prizeInformation = get_post_meta($this->ID, "ccc_prize_information", true);
@@ -156,13 +143,15 @@ class CCC_Contest_Codes {
 		$id = wp_insert_post($args, true);
 
 		$contest_code = WP_Post::get_instance($id);
-		$this->set_has_been_used($data['hasBeenUsed']);
+		if( isset( $data['hasBeenUsed'] ) ) {
+			$this->set_has_been_used($data['hasBeenUsed']);
+		}
 
-		if ( ! add_post_meta( $id, 'ccc_prize', $data['prize'], true ) ) {
+		if ( isset( $data['prize'] ) && ! add_post_meta( $id, 'ccc_prize', $data['prize'], true ) ) {
 			update_post_meta( $id, 'ccc_prize', $data['prize'] );
 		}
 
-		if ( ! add_post_meta( $id, "ccc_prize_information", $data['prizeInformation'], true ) ) {
+		if ( isset( $data['prizeInformation'] ) && ! add_post_meta( $id, "ccc_prize_information", $data['prizeInformation'], true ) ) {
 			update_post_meta( $id, "ccc_prize_information", $data['prizeInformation'] );
 		}
 
