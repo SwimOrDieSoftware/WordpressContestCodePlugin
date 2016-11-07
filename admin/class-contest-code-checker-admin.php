@@ -504,6 +504,8 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function export_all() {
+		global $wpdb;
+
 		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
 			// IE Bug in download name workaround
 			ini_set( 'zlib.output_compression','Off' );
@@ -513,28 +515,21 @@ class CCC_Contest_Code_Checker_Admin {
 		header('Content-Disposition: attachment; filename="ccc_contestants.csv"');
 		$csv = "\"First Name\",\"Last Name\",\"Email\",\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
 
-		$args = array(
-				'post_type'	=> "ccc_contestants",
-				"posts_per_page" => -1,
-			);
-		$contestants = new WP_Query($args);
-		if ( $contestants->have_posts() ) {
-			while ( $contestants->have_posts() ) {
-				$contestants->the_post();
-				$id = $contestants->post->ID;
-				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
-				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
-				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
-				$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
-				if($ccId > 0) {
-					$cc = new CCC_Contest_Codes($ccId);
-					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",";
-				} else {
-					$csv .= "\"\",\"\",";
-				}
-
-				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"\r\n";
+		$contestants = $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_type = 'ccc_contestants'");
+		foreach($contestants as $c) {
+			$id = $c->ID;
+			$ccId = get_post_meta($id, "ccc_contest_code_id", true);
+			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
+			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
+			$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
+			if($ccId > 0) {
+				$cc = new CCC_Contest_Codes($ccId);
+				$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",";
+			} else {
+				$csv .= "\"\",\"\",";
 			}
+
+			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"\r\n";
 		}
 
 		echo $csv;
