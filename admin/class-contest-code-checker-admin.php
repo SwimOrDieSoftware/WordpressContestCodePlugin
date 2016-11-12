@@ -484,7 +484,7 @@ class CCC_Contest_Code_Checker_Admin {
 				$id = $contestants->post->ID;
 				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
 				$cc = new CCC_Contest_Codes($ccId);
-				if(!empty($cc->get_prize())) {
+				if( $cc->get_prize() != '' ) {
 					$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
 					$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
 					$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
