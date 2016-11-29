@@ -150,7 +150,7 @@ class CCC_Contestants_Table extends WP_List_Table {
 
 			$code = esc_html($tmp->get_code());
 
-			if(!empty($tmp->get_prize())) {
+			if( $tmp->get_prize() != "" ) {
 				$code .= " - <b>".__("winner", 'contest-code')."</b>";
 			}
 		}
