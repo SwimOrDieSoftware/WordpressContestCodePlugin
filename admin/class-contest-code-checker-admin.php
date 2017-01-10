@@ -402,7 +402,7 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_email_winner_body_field($args) {
 		?>
 			<textarea name="ccc_email_winner_body" id="ccc_email_winner_body" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_email_winner_body")); ?></textarea>
-		<?
+		<?php
 	}
 
 	/**
@@ -413,7 +413,7 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_text_winning_field($args) {
 		?>
 			<textarea name="ccc_text_winning" id="ccc_text_winning" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_winning")); ?></textarea>
-		<?
+		<?php
 	}
 
 	/**
@@ -424,7 +424,7 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_text_losing_field($args) {
 		?>
 			<textarea name="ccc_text_losing" id="ccc_text_losing" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_losing")); ?></textarea>
-		<?
+		<?php
 	}
 
 	/**
@@ -435,7 +435,7 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_text_invalid_code_field($args) {
 		?>
 			<textarea name="ccc_text_invalid" id="ccc_text_invalid" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_invalid")); ?></textarea>
-		<?
+		<?php
 	}
 
 	/**
@@ -446,13 +446,13 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_text_already_used_code_field($args) {
 		?>
 			<textarea name="ccc_text_already_used" id="ccc_text_already_used" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_text_already_used")); ?></textarea>
-		<?
+		<?php
 	}
 
 	public function display_contest_not_running_field($args) {
 		?>
 			<textarea name="ccc_contest_not_running" id="ccc_contest_not_running" class="large-text" rows="10"><?php echo esc_html(get_option("ccc_contest_not_running")); ?></textarea>
-		<?
+		<?php
 	}
 
 	/**
