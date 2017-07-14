@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.1.5 =
+* Added the ability to hide the first name, last name and email fields
 
 = 1.1.4 =
 * Fixed php short-code openings that don't work with some PHP configurations

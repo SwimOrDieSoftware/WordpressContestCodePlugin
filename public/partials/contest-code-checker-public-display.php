@@ -35,20 +35,26 @@ class CCC_Contest_Code_Checker_Public_Displays {
 				<input type="hidden" name="step" value="check_code" />
 				<?php wp_nonce_field("contest_code_frontend_form"); ?>
 
+				<?php if( get_option("ccc_hide_first_name") !== "Y" ): ?>
 				<p class="ccc_form_element">
 					<label for="contestants_name"><?php echo esc_html($first_name_label); ?></label>
 					<input type="text" name="contestants_name" id="contestants_name" required />
 				</p>
+				<?php endif; ?>
 
+				<?php if( get_option("ccc_hide_last_name") !== "Y" ): ?>
 				<p class="ccc_form_element">
 					<label for="contestants_last_name"><?php echo esc_html($last_name_label); ?></label>
 					<input type="text" name="contestants_last_name" id="contestants_last_name" required />
 				</p>
+				<?php endif; ?>
 
+				<?php if( get_option("ccc_hide_email") !== "Y" ): ?>
 				<p class="ccc_form_element">
 					<label for="contestants_email"><?php echo esc_html($emailLabel); ?></label>
 					<input type="text" name="contestants_email" id="contestants_email" />
 				</p>
+				<?php endif; ?>
 
 				<p class="ccc_form_element">
 					<label for="contestants_code"><?php echo esc_html($prizeCodeLabel); ?></label>

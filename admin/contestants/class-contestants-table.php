@@ -184,12 +184,21 @@ class CCC_Contestants_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'         	=> '<input type="checkbox" />',
-			'first_name'    => __( 'First Name', 'contest-code' ),
-			'last_name'		=> __( 'Last Name', 'contest-code' ),
-      		'email'         => __( 'Email Address', 'contest-code' ),
-			'contest_code'  => __( 'Contest Code', 'contest-code' ),
-			'invalid_code'	=> __( 'Invalid Code', 'contest-code' ),
 		);
+		if( get_option("ccc_hide_first_name") != "Y" ) {
+			$columns['first_name'] = __( 'First Name', 'contest-code' );
+		}
+
+		if( get_option("ccc_hide_last_name") != "Y" ) {
+			$columns['last_name'] = __( 'Last Name', 'contest-code' );
+		}
+
+		if( get_option("ccc_hide_email") != "Y" ) {
+			$columns['email'] = __( 'Email Address', 'contest-code' );
+		}
+
+      	$columns['contest_code'] = __( 'Contest Code', 'contest-code' );
+      	$columns['invalid_code'] = __( 'Invalid Code', 'contest-code' );
 
 		return $columns;
 

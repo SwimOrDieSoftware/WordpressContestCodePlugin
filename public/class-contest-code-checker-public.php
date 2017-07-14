@@ -197,11 +197,26 @@ class CCC_Contest_Code_Checker_Public {
 		}
 
 		do_action("ccc_handle_contest_code_submission", $_POST);
+		$first_name = '';
+		$last_name = '';
+		$email = '';
+
+		if ( get_option("ccc_hide_first_name") !== "Y" ) {
+			$first_name = $_POST['contestants_first_name'];
+		}
+
+		if ( get_option("ccc_hide_last_name") !== "Y" ) {
+			$last_name = $_POST['contestants_last_name'];
+		}		
+
+		if ( get_option("ccc_hide_email") !== "Y" ) {
+			$email = $_POST['contestants_email'];
+		}
 
 		$is_winner = $this->is_winning_code( $_POST['contestants_code'],
-											 $_POST['contestants_first_name'],
-											 $_POST['contestants_last_name'],
-											 $_POST['contestants_email'] );
+											 $first_name,
+											 $last_name,
+											 $email );
 
 
 		$message = $this->display->get_losing_message();
@@ -237,10 +252,26 @@ class CCC_Contest_Code_Checker_Public {
 
 		do_action("ccc_handle_contest_code_submission", $_POST);
 
+		$first_name = '';
+		$last_name = '';
+		$email = '';
+
+		if ( get_option("ccc_hide_first_name") !== "Y" ) {
+			$first_name = $_POST['contestants_first_name'];
+		}
+
+		if ( get_option("ccc_hide_last_name") !== "Y" ) {
+			$last_name = $_POST['contestants_last_name'];
+		}		
+
+		if ( get_option("ccc_hide_email") !== "Y" ) {
+			$email = $_POST['contestants_email'];
+		}
+
 		$is_winner = $this->is_winning_code( $_POST['contestants_code'],
-											 $_POST['contestants_name'],
-											 $_POST['contestants_last_name'],
-											 $_POST['contestants_email'] );
+											 $first_name,
+											 $last_name,
+											 $email );
 
 		if( $is_winner['is_winner'] ) {
 			return $this->display_winning_message($is_winner['code']);

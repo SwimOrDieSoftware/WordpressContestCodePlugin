@@ -264,6 +264,42 @@ class CCC_Contest_Code_Checker_Admin {
 											"ccc_options",
 											"contest_code_checker_options");
 
+		add_settings_field("ccc_hide_email",
+											__("Hide email address", "contest-code"),
+											array($this, "display_hide_email_field"),
+											"ccc_options",
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_hide_first_name",
+											__("Hide first name", "contest-code"),
+											array($this, "display_hide_first_name_field"),
+											"ccc_options",
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_hide_last_name",
+											__("Hide last name", "contest-code"),
+											array($this, "display_hide_last_name_field"),
+											"ccc_options",
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_enable_captcha",
+											__("Enable CAPTCHA", "contest-code"),
+											array($this, "display_enable_captcha_field"),
+											"ccc_options",
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_recaptcha_secret_api",
+											__("reCAPTCHA Secret Key", "contest-code"),
+											array($this, "display_recaptcha_secret_key"),
+											"ccc_options",
+											"contest_code_checker_options");
+
+		add_settings_field("ccc_recaptcha_site_key",
+											__("reCAPTCHA Site Key", "contest-code"),
+											array($this, "display_recaptcha_site_key"),
+											"ccc_options",
+											"contest_code_checker_options");
+
 		register_setting("contest_code_checker_options", "ccc_start_date");
 		register_setting("contest_code_checker_options", "ccc_end_date");
 		register_setting("contest_code_checker_options", "ccc_display_popover");
@@ -277,6 +313,12 @@ class CCC_Contest_Code_Checker_Admin {
 		register_setting("contest_code_checker_options", "ccc_text_invalid");
 		register_setting("contest_code_checker_options", "ccc_text_already_used");
 		register_setting("contest_code_checker_options", "ccc_contest_not_running");
+		register_setting("contest_code_checker_options", "ccc_hide_email");
+		register_setting("contest_code_checker_options", "ccc_hide_first_name");
+		register_setting("contest_code_checker_options", "ccc_hide_last_name");
+		register_setting("contest_code_checker_options", "ccc_enable_captcha");
+		register_setting("contest_code_checker_options", "ccc_recaptcha_secret_api");
+		register_setting("contest_code_checker_options", "ccc_recaptcha_site_key");
 	}
 
 	/**
@@ -358,6 +400,72 @@ class CCC_Contest_Code_Checker_Admin {
 	public function display_popover_field($args) {
 		?>
 			<input type="checkbox" name="ccc_display_popover" id="ccc_display_popover" value="Y" <?php echo (get_option("ccc_display_popover") == "Y") ? "checked=\"checked\"" : ""; ?>/>
+		<?php
+	}
+
+	/**
+	 *  Displays the hide email address setting field
+	 *
+	 * @since 1.1.5
+	 */
+	public function display_hide_email_field($args) {
+		?>
+			<input type="checkbox" name="ccc_hide_email" id="ccc_hide_email" value="Y" <?php echo (get_option("ccc_hide_email") == "Y") ? "checked=\"checked\"" : ""; ?>/>
+		<?php
+	}
+
+	/**
+	 *  Displays the hide first name setting field
+	 *
+	 * @since 1.1.5
+	 */
+	public function display_hide_first_name_field($args) {
+		?>
+			<input type="checkbox" name="ccc_hide_first_name" id="ccc_hide_first_name" value="Y" <?php echo (get_option("ccc_hide_first_name") == "Y") ? "checked=\"checked\"" : ""; ?>/>
+		<?php
+	}
+
+	/**
+	 *  Displays the hide last name setting field
+	 *
+	 * @since 1.1.5
+	 */
+	public function display_hide_last_name_field($args) {
+		?>
+			<input type="checkbox" name="ccc_hide_last_name" id="ccc_hide_last_name" value="Y" <?php echo (get_option("ccc_hide_last_name") == "Y") ? "checked=\"checked\"" : ""; ?>/>
+		<?php
+	}
+
+	/**
+	 *  Displays the enable CAPTCHA setting field
+	 *
+	 * @since 1.1.5
+	 */
+	public function display_enable_captcha_field($args) {
+		?>
+			<input type="checkbox" name="ccc_enable_captcha" id="ccc_enable_captcha" value="Y" <?php echo (get_option("ccc_enable_captcha") == "Y") ? "checked=\"checked\"" : ""; ?>/>
+		<?php
+	}	
+
+	/**
+	 *  Displays the reCAPTCHA secret key setting field
+	 *
+	 * @since 1.1.5
+	 */
+	public function display_recaptcha_secret_key($args) {
+		?>
+			<input type="text" name="ccc_recaptcha_secret_api" id="ccc_recaptcha_secret_api" value="<?php echo esc_attr(get_option("ccc_recaptcha_secret_api")); ?>" class="large-text" />
+		<?php
+	}
+
+	/**
+	 *  Displays the reCAPTCHA site key setting field
+	 *
+	 * @since 1.1.5
+	 */
+	public function display_recaptcha_site_key($args) {
+		?>
+			<input type="text" name="ccc_recaptcha_site_key" id="ccc_recaptcha_site_key" value="<?php echo esc_attr(get_option("ccc_recaptcha_site_key")); ?>" class="large-text" />
 		<?php
 	}
 
@@ -461,6 +569,11 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function export_winners() {
+
+		$hide_first_name = ( get_option("ccc_hide_first_name") === "Y" ) ? true : false;
+		$hide_last_name = ( get_option("ccc_hide_last_name") === "Y" ) ? true : false;
+		$hide_email = ( get_option("ccc_hide_email") === "Y" ) ? true : false;
+
 		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
 			// IE Bug in download name workaround
 			ini_set( 'zlib.output_compression','Off' );
@@ -468,7 +581,21 @@ class CCC_Contest_Code_Checker_Admin {
 		header('Content-Description: Contest Code Checker Export');
 		header("Content-Type: application/vnd.ms-excel", true);
 		header('Content-Disposition: attachment; filename="ccc_winners.csv"');
-		$csv = "\"First Name\",\"Last Name\",\"Email\",\"Contest Code\",\"Prize\"\r\n";
+		$csv = "";
+
+		if( ! $hide_first_name ) {
+			$csv .= "\"First Name\",";
+		}
+
+		if( ! $hide_last_name ) {
+			$csv .= "\"Last Name\",";
+		}
+
+		if( ! $hide_email ) {
+			$csv .= "\"Email\",";
+		}
+
+		$csv .= "\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
 
 		$args = array(
 				'post_type'	=> "ccc_contestants",
@@ -485,9 +612,18 @@ class CCC_Contest_Code_Checker_Admin {
 				$ccId = get_post_meta($id, "ccc_contest_code_id", true);
 				$cc = new CCC_Contest_Codes($ccId);
 				if( $cc->get_prize() != '' ) {
-					$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
-					$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
-					$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
+					if( ! $hide_first_name ) {
+						$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
+					}
+
+					if ( ! $hide_last_name ) {
+						$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";	
+					}
+					
+					if ( ! $hide_email ) {
+						$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";	
+					}
+					
 					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\"\r\n";
 				}
 			}
@@ -506,6 +642,10 @@ class CCC_Contest_Code_Checker_Admin {
 	public function export_all() {
 		global $wpdb;
 
+		$hide_first_name = ( get_option("ccc_hide_first_name") === "Y" ) ? true : false;
+		$hide_last_name = ( get_option("ccc_hide_last_name") === "Y" ) ? true : false;
+		$hide_email = ( get_option("ccc_hide_email") === "Y" ) ? true : false;
+
 		if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/MSIE/", $_SERVER['HTTP_USER_AGENT'])) {
 			// IE Bug in download name workaround
 			ini_set( 'zlib.output_compression','Off' );
@@ -513,15 +653,38 @@ class CCC_Contest_Code_Checker_Admin {
 		header('Content-Description: Contest Code Checker Export');
 		header("Content-Type: application/vnd.ms-excel", true);
 		header('Content-Disposition: attachment; filename="ccc_contestants.csv"');
-		$csv = "\"First Name\",\"Last Name\",\"Email\",\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
+		$csv = "";
+
+		if( ! $hide_first_name ) {
+			$csv .= "\"First Name\",";
+		}
+
+		if( ! $hide_last_name ) {
+			$csv .= "\"Last Name\",";
+		}
+
+		if( ! $hide_email ) {
+			$csv .= "\"Email\",";
+		}
+
+		$csv .= "\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
 
 		$contestants = $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_type = 'ccc_contestants'");
 		foreach($contestants as $c) {
 			$id = $c->ID;
 			$ccId = get_post_meta($id, "ccc_contest_code_id", true);
-			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
-			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";
-			$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";
+			if( ! $hide_first_name ) {
+				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
+			}
+
+			if ( ! $hide_last_name ) {
+				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";	
+			}
+			
+			if ( ! $hide_email ) {
+				$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";	
+			}
+
 			if($ccId > 0) {
 				$cc = new CCC_Contest_Codes($ccId);
 				$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",";

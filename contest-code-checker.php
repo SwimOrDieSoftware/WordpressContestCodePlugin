@@ -3,13 +3,13 @@
  * @link              http://www.swimordiesoftware.com
  * @since             1.0.0
  * @package           Contest_Code_Checker
- * @version 1.1.4
+ * @version 1.1.5
  *
  * @wordpress-plugin
  * Plugin Name:       Contest Code Checker
  * Plugin URI:        https://wordpress.org/plugins/contest-code-checker/
  * Description:       Maintain a list of contest codes and have users check to see if they have won anything
- * Version:           1.1.4
+ * Version:           1.1.5
  * Author:            Swim or Die Software
  * Author URI:        http://www.swimordiesoftware.com
  * License:           GPL-2.0+
