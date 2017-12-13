@@ -120,7 +120,7 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
 	  		$code = new CCC_Contest_Codes($codeId);
 	  		$data = array();
 
-	  		$data['hasBeenUsed'] = (strtoupper($_POST['hasBeenUsed']) == "Y") ? true : false;
+	  		$data['hasBeenUsed'] = ( isset( $_POST['hasBeenUsed'] ) && ( strtoupper( $_POST['hasBeenUsed'] ) == "Y" ) ) ? true : false;
 	  		$data['prize'] = $_POST['prize'];
 	  		$data['post_title'] = $_POST['post_title'];
 	  		$data['prizeInformation'] = $_POST['prizeInformation'];
