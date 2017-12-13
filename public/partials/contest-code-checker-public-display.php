@@ -37,8 +37,8 @@ class CCC_Contest_Code_Checker_Public_Displays {
 
 				<?php if( get_option("ccc_hide_first_name") !== "Y" ): ?>
 				<p class="ccc_form_element">
-					<label for="contestants_name"><?php echo esc_html($first_name_label); ?></label>
-					<input type="text" name="contestants_name" id="contestants_name" required />
+					<label for="contestants_first_name"><?php echo esc_html($first_name_label); ?></label>
+					<input type="text" name="contestants_first_name" id="contestants_first_name" required />
 				</p>
 				<?php endif; ?>
 

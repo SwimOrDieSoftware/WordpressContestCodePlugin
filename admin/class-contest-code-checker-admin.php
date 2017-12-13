@@ -595,7 +595,7 @@ class CCC_Contest_Code_Checker_Admin {
 			$csv .= "\"Email\",";
 		}
 
-		$csv .= "\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
+		$csv .= "\"Contest Code\",\"Prize\",\"Submission Date\"\r\n";
 
 		$args = array(
 				'post_type'	=> "ccc_contestants",
@@ -624,7 +624,10 @@ class CCC_Contest_Code_Checker_Admin {
 						$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";	
 					}
 					
-					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\"\r\n";
+					$csv .= "\"".$cc->get_code()."\",\"".str_replace("\"", "\"\"",$cc->get_prize())."\",\"" . date_i18n(
+                get_option('date_format') . ' ' . get_option('time_format'),
+                strtotime($contestants->post->post_date)
+            ) . "\"\r\n";
 				}
 			}
 		}
@@ -667,9 +670,9 @@ class CCC_Contest_Code_Checker_Admin {
 			$csv .= "\"Email\",";
 		}
 
-		$csv .= "\"Contest Code\",\"Prize\",\"Invalid Contest Code\"\r\n";
+		$csv .= "\"Contest Code\",\"Prize\",\"Invalid Contest Code\",\"Submission Date\"\r\n";
 
-		$contestants = $wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE post_type = 'ccc_contestants'");
+		$contestants = $wpdb->get_results("SELECT ID, post_date FROM $wpdb->posts WHERE post_type = 'ccc_contestants'");
 		foreach($contestants as $c) {
 			$id = $c->ID;
 			$ccId = get_post_meta($id, "ccc_contest_code_id", true);
@@ -692,7 +695,12 @@ class CCC_Contest_Code_Checker_Admin {
 				$csv .= "\"\",\"\",";
 			}
 
-			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"\r\n";
+			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"";
+			$csv .= ",\"" . date_i18n(
+                get_option('date_format') . ' ' . get_option('time_format'),
+                strtotime($c->post_date)
+            ) ."\"";
+			$csv .= "\r\n";
 		}
 
 		echo $csv;

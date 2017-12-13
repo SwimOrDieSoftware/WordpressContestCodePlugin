@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contest codes, contests, contest code checkers
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,10 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contest code checker settings area
 
 == Changelog ==
+
+= 1.1.6 =
+* Fixed an issue where the contestant's first name wasn't recorded when using a non-AJAX form
+* Added the submission date to the contestant's grid and export
 
 = 1.1.5 =
 * Added the ability to hide the first name, last name and email fields

@@ -7,7 +7,7 @@
 
 			var data = {
 				'action': 'submit_contest_code',
-				'contestants_first_name': $("#contestants_name").val(),
+				'contestants_first_name': $("#contestants_first_name").val(),
 				'contestants_last_name': $("#contestants_last_name").val(),
 				'contestants_email': $("#contestants_email").val(),
 				'contestants_code': $("#contestants_code").val(),

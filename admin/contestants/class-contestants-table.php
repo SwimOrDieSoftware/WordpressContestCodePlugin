@@ -199,6 +199,7 @@ class CCC_Contestants_Table extends WP_List_Table {
 
       	$columns['contest_code'] = __( 'Contest Code', 'contest-code' );
       	$columns['invalid_code'] = __( 'Invalid Code', 'contest-code' );
+      	$columns['submission_date'] = __( 'Submission Date', 'contest-code' );
 
 		return $columns;
 
@@ -291,13 +292,17 @@ class CCC_Contestants_Table extends WP_List_Table {
 			$contestants->the_post();
 
 			$data[] = array(
-				"ID"			=> $contestants->post->ID,
-				"title" 		=> get_the_title($contestants->post->ID),
-				"first_name"	=> get_post_meta($contestants->post->ID, "ccc_contestant_first_name", true),
-				"last_name"		=> get_post_meta($contestants->post->ID, "ccc_contestant_last_name", true),
-				"email" 		=> get_post_meta($contestants->post->ID, "ccc_email", true),
-				"contest_code"	=> get_post_meta($contestants->post->ID, "ccc_contest_code_id", true),
-				"invalid_code" 	=> get_post_meta($contestants->post->ID, "ccc_invalid_contest_code", true),
+				"ID"				=> $contestants->post->ID,
+				"title" 			=> get_the_title($contestants->post->ID),
+				"first_name"		=> get_post_meta($contestants->post->ID, "ccc_contestant_first_name", true),
+				"last_name"			=> get_post_meta($contestants->post->ID, "ccc_contestant_last_name", true),
+				"email" 			=> get_post_meta($contestants->post->ID, "ccc_email", true),
+				"contest_code"		=> get_post_meta($contestants->post->ID, "ccc_contest_code_id", true),
+				"invalid_code" 		=> get_post_meta($contestants->post->ID, "ccc_invalid_contest_code", true),
+				"submission_date" 	=> date_i18n(
+                	get_option('date_format') . ' ' . get_option('time_format'),
+                	strtotime($contestants->post->post_date)
+            	),
 			);
 		}
 
