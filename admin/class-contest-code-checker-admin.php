@@ -282,23 +282,23 @@ class CCC_Contest_Code_Checker_Admin {
 											"ccc_options",
 											"contest_code_checker_options");
 
-		add_settings_field("ccc_enable_captcha",
-											__("Enable CAPTCHA", "contest-code"),
-											array($this, "display_enable_captcha_field"),
-											"ccc_options",
-											"contest_code_checker_options");
+		// add_settings_field("ccc_enable_captcha",
+		// 									__("Enable CAPTCHA", "contest-code"),
+		// 									array($this, "display_enable_captcha_field"),
+		// 									"ccc_options",
+		// 									"contest_code_checker_options");
 
-		add_settings_field("ccc_recaptcha_secret_api",
-											__("reCAPTCHA Secret Key", "contest-code"),
-											array($this, "display_recaptcha_secret_key"),
-											"ccc_options",
-											"contest_code_checker_options");
+		// add_settings_field("ccc_recaptcha_secret_api",
+		// 									__("reCAPTCHA Secret Key", "contest-code"),
+		// 									array($this, "display_recaptcha_secret_key"),
+		// 									"ccc_options",
+		// 									"contest_code_checker_options");
 
-		add_settings_field("ccc_recaptcha_site_key",
-											__("reCAPTCHA Site Key", "contest-code"),
-											array($this, "display_recaptcha_site_key"),
-											"ccc_options",
-											"contest_code_checker_options");
+		// add_settings_field("ccc_recaptcha_site_key",
+		// 									__("reCAPTCHA Site Key", "contest-code"),
+		// 									array($this, "display_recaptcha_site_key"),
+		// 									"ccc_options",
+		// 									"contest_code_checker_options");
 
 		register_setting("contest_code_checker_options", "ccc_start_date");
 		register_setting("contest_code_checker_options", "ccc_end_date");
@@ -569,7 +569,8 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function export_winners() {
-
+		set_time_limit(0); // Set the time limit to forever to handle large number of contestants from being exported
+		
 		$hide_first_name = ( get_option("ccc_hide_first_name") === "Y" ) ? true : false;
 		$hide_last_name = ( get_option("ccc_hide_last_name") === "Y" ) ? true : false;
 		$hide_email = ( get_option("ccc_hide_email") === "Y" ) ? true : false;
@@ -644,6 +645,7 @@ class CCC_Contest_Code_Checker_Admin {
 	 */
 	public function export_all() {
 		global $wpdb;
+		set_time_limit(0); // Set the time limit to forever to handle large number of contestants from being exported
 
 		$hide_first_name = ( get_option("ccc_hide_first_name") === "Y" ) ? true : false;
 		$hide_last_name = ( get_option("ccc_hide_last_name") === "Y" ) ? true : false;
@@ -673,19 +675,22 @@ class CCC_Contest_Code_Checker_Admin {
 		$csv .= "\"Contest Code\",\"Prize\",\"Invalid Contest Code\",\"Submission Date\"\r\n";
 
 		$contestants = $wpdb->get_results("SELECT ID, post_date FROM $wpdb->posts WHERE post_type = 'ccc_contestants'");
+		$date_format = get_option('date_format') . ' ' . get_option('time_format');
 		foreach($contestants as $c) {
 			$id = $c->ID;
-			$ccId = get_post_meta($id, "ccc_contest_code_id", true);
+			$custom_fields = get_post_custom( $id );
+
+			$ccId = isset( $custom_fields['ccc_contest_code_id'] ) ? $custom_fields['ccc_contest_code_id'] : 0;
 			if( ! $hide_first_name ) {
-				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_first_name", true))."\",";
+				$csv .= "\"".str_replace("\"", "\"\"", $custom_fields["ccc_contestant_first_name"][0])."\",";
 			}
 
 			if ( ! $hide_last_name ) {
-				$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_contestant_last_name", true))."\",";	
+				$csv .= "\"".str_replace("\"", "\"\"", $custom_fields["ccc_contestant_last_name"][0])."\",";	
 			}
 			
 			if ( ! $hide_email ) {
-				$csv .= "\"".get_post_meta($id, "ccc_email", true)."\",";	
+				$csv .= "\"". $custom_fields["ccc_email"][0]."\",";	
 			}
 
 			if($ccId > 0) {
@@ -695,9 +700,9 @@ class CCC_Contest_Code_Checker_Admin {
 				$csv .= "\"\",\"\",";
 			}
 
-			$csv .= "\"".str_replace("\"", "\"\"",get_post_meta($id, "ccc_invalid_contest_code", true))."\"";
+			$csv .= "\"".str_replace("\"", "\"\"", isset( $custom_fields["ccc_invalid_contest_code"] ) ? $custom_fields["ccc_invalid_contest_code"][0] : '')."\"";
 			$csv .= ",\"" . date_i18n(
-                get_option('date_format') . ' ' . get_option('time_format'),
+                $date_format,
                 strtotime($c->post_date)
             ) ."\"";
 			$csv .= "\r\n";
