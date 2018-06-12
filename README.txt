@@ -11,6 +11,8 @@ A plugin to allow for people to enter in a contest code and see if they won a pr
 
 == Description ==
 
+> If you are looking for a quicker or more in-depth support response it is suggested to check out <a href="https://www.contestcodechecker.com/" target="_blank" title="[new window to Contest Code Checker Pro]">Contest Code Checker Pro</a> or you can <a href="https://www.contestcodechecker.com/contact/" target="_blank">Contact Us</a> and we will help you as best as possible.
+
 This plugin was created for people who have contest codes on a physical or electronic product that are tied to a prize. The user who receives the contest code can go to a page or post and enter in their name, email and code and get back if they have won or lost.
 
 The following capabilies exist:
@@ -18,6 +20,11 @@ The following capabilies exist:
 * User-facing form to check contest codes
 * Admin area to manage contest codes with the ability to import codes
 * Admin area to view contestants, also export contestants
+
+= ADDITIONAL FEATURES IN THE <a target="_new" href="https://www.contestcodechecker.com/">PREMIUM VERSION</a> =
+* Multiple contests
+* Custom fields
+* More info at <a target="_new" href="https://www.contestcodechecker.com"/>https://www.contestcodechecker.com</a>
 
 == Installation ==
 
