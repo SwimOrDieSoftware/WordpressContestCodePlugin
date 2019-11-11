@@ -1,8 +1,8 @@
 === Contest Code Checker ===
 Contributors: mdedev
-Tags: contest codes, contests, contest code checkers
+Tags: contests, giveaways, sweepstakes, competition
 Requires at least: 4.0
-Tested up to: 5.1.0
+Tested up to: 5.2.4
 Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
