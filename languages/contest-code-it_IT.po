@@ -1,0 +1,253 @@
+# Copyright (C) 2016 Contest Code Checker
+# This file is distributed under the same license as the Contest Code Checker package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Contest Code Checker 1.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/"
+"WordpressContestCodePlugin\n"
+"POT-Creation-Date: 2016-07-19 23:54:51+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-05-30 16:58+0200\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.4\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it_IT\n"
+
+#. Plugin Name of the plugin/theme
+#: admin/class-contest-code-checker-admin.php:132
+#: admin/class-contest-code-checker-admin.php:133
+msgid "Contest Code Checker"
+msgstr "Contest Code Checker"
+
+#: admin/class-contest-code-checker-admin.php:139
+#: admin/class-contest-code-checker-admin.php:140
+#: admin/contestants/class-contestants-table.php:62
+#: admin/contestants/class-contestants-table.php:63
+#: admin/partials/contest-code-checker-admin-display.php:47
+#: includes/class-contest-code-checker.php:266
+msgid "Contestants"
+msgstr "Partecipanti"
+
+#: admin/class-contest-code-checker-admin.php:146
+#: admin/class-contest-code-checker-admin.php:147
+#: admin/contest_codes/class-contest-codes-table.php:63
+#: admin/partials/contest-code-checker-admin-display.php:29
+#: includes/class-contest-code-checker.php:249
+#: includes/class-contest-code-checker.php:253
+msgid "Contest Codes"
+msgstr "Codici del contest"
+
+#: admin/class-contest-code-checker-admin.php:153
+#: admin/class-contest-code-checker-admin.php:154
+#: admin/partials/contest-code-checker-admin-display.php:126
+#: admin/partials/contest-code-checker-admin-display.php:141
+msgid "Import Contest Codes"
+msgstr "Importa i codici del contest"
+
+#: admin/class-contest-code-checker-admin.php:166
+msgid "General Settings"
+msgstr "Impostazioni generali"
+
+#: admin/class-contest-code-checker-admin.php:169
+msgid "Start date of contest"
+msgstr "Data di inizio del contest"
+
+#: admin/class-contest-code-checker-admin.php:175
+msgid "End date of contest"
+msgstr "Data di fine del contest"
+
+#: admin/class-contest-code-checker-admin.php:181
+msgid "Email winners with prize information"
+msgstr "Invia una email ai vincitori con le informazioni sul premio"
+
+#: admin/class-contest-code-checker-admin.php:187
+msgid "Winner email subject"
+msgstr "Oggetto della email per i vincitori"
+
+#: admin/class-contest-code-checker-admin.php:193
+msgid "Beginning of winner email"
+msgstr "Inizio della email per i vincitori"
+
+#: admin/class-contest-code-checker-admin.php:199
+msgid "Text for When Someone Wins"
+msgstr "Testo da visualizzare quando qualcuno vince"
+
+#: admin/class-contest-code-checker-admin.php:205
+msgid "Text for When Someone Loses"
+msgstr "Testo da visualizzare quando qualcuno perde"
+
+#: admin/class-contest-code-checker-admin.php:211
+msgid "Text for when the contest is not currently running"
+msgstr "Testo da visualizzare quando il contest non è attivo"
+
+#: admin/contest_codes/class-contest-codes-table.php:62
+#: admin/contest_codes/class-contest-codes-table.php:170
+#: admin/contestants/class-contestants-table.php:189
+#: includes/class-contest-code-checker.php:252
+msgid "Contest Code"
+msgstr "Codice di partecipazione al contest"
+
+#: admin/contest_codes/class-contest-codes-table.php:137
+msgid "Edit"
+msgstr "Modifica"
+
+#: admin/contest_codes/class-contest-codes-table.php:139
+#: admin/contest_codes/class-contest-codes-table.php:203
+#: admin/contestants/class-contestants-table.php:140
+#: admin/contestants/class-contestants-table.php:221
+msgid "Delete"
+msgstr "Elimina"
+
+#: admin/contest_codes/class-contest-codes-table.php:171
+msgid "Prize"
+msgstr "Premio"
+
+#: admin/contest_codes/class-contest-codes-table.php:172
+msgid "Has Been Used"
+msgstr "è già stato usato"
+
+#: admin/contest_codes/class-contest-codes-table.php:267
+msgid "Yes"
+msgstr "Si"
+
+#: admin/contest_codes/class-contest-codes-table.php:269
+msgid "No"
+msgstr "No"
+
+#: admin/contestants/class-contestants-table.php:154
+msgid "winner"
+msgstr "vincitore"
+
+#: admin/contestants/class-contestants-table.php:187
+msgid "Contestant"
+msgstr "Partecipante"
+
+#: admin/contestants/class-contestants-table.php:188
+msgid "Email Address"
+msgstr "Indirizzo e-mail"
+
+#: admin/contestants/class-contestants-table.php:190
+msgid "Invalid Code"
+msgstr "Codice non valido"
+
+#: admin/partials/contest-code-checker-admin-display.php:29
+msgid "Add New"
+msgstr "Aggiungi nuovo"
+
+#: admin/partials/contest-code-checker-admin-display.php:49
+msgid "Export Winners"
+msgstr "Esporta i vincitori"
+
+#: admin/partials/contest-code-checker-admin-display.php:50
+msgid "Export All"
+msgstr "Esporta tutti"
+
+#: admin/partials/contest-code-checker-admin-display.php:68
+msgid "Edit Contest Code"
+msgstr "Modifica codice di partecipazione"
+
+#: admin/partials/contest-code-checker-admin-display.php:70
+msgid "Add Contest Code"
+msgstr "Aggiungi codice di partecipazione"
+
+#: admin/partials/contest-code-checker-admin-display.php:71
+msgid "Go Back"
+msgstr "Torna indietro"
+
+#: admin/partials/contest-code-checker-admin-display.php:78
+msgid "Contest code"
+msgstr "Codice del contest"
+
+#: admin/partials/contest-code-checker-admin-display.php:86
+msgid "Prize associated with code"
+msgstr "Premio associato al codice"
+
+#: admin/partials/contest-code-checker-admin-display.php:94
+msgid "Has this code been used?"
+msgstr "Questo codice è già stato usato?"
+
+#: admin/partials/contest-code-checker-admin-display.php:103
+msgid "Prize Details"
+msgstr "Dettagli del premio"
+
+#: admin/partials/contest-code-checker-admin-display.php:116
+msgid "Save Contest Code"
+msgstr "Salve il codice del contest"
+
+#: admin/partials/contest-code-checker-admin-display.php:129
+msgid ""
+"Import contest codes from a Excel or CSV file. The format is as follows:"
+msgstr ""
+"Importa i codici del contest da un file Excel o CSV. Il formato è il "
+"seguente:"
+
+#: admin/partials/contest-code-checker-admin-display.php:132
+msgid "Column 1: Contest Code"
+msgstr "Colonna 1: Codice del contest"
+
+#: admin/partials/contest-code-checker-admin-display.php:133
+msgid "Column 2: Prize (if any)"
+msgstr "Colonna 2: Premio (se vincente)"
+
+#: admin/partials/contest-code-checker-admin-display.php:134
+msgid "Column 3: Prize description"
+msgstr "Colonna 3: Descrizione del premio"
+
+#: admin/partials/contest-code-checker-admin-settings.php:23
+msgid "Settings saved."
+msgstr "Impostazioni salvate."
+
+#: admin/partials/contest-code-checker-admin-settings.php:26
+msgid "Contest Code Checker General Settings"
+msgstr "Impostazioni generali di Contest Code Checker"
+
+#: public/partials/contest-code-checker-public-display.php:27
+msgid "Your Name"
+msgstr "Il tuo nome"
+
+#: public/partials/contest-code-checker-public-display.php:28
+msgid "Your Email"
+msgstr "La tua email"
+
+#: public/partials/contest-code-checker-public-display.php:29
+msgid "Prize Code"
+msgstr "Codice"
+
+#: public/partials/contest-code-checker-public-display.php:30
+msgid "Submit Prize"
+msgstr "Invia"
+
+#: public/partials/contest-code-checker-public-display.php:71
+msgid "This contest is currently not running."
+msgstr "Questo contest non è attivo in questo momento."
+
+#: public/partials/contest-code-checker-public-display.php:89
+msgid "The code you entered was not a winner."
+msgstr "Non hai vinto."
+
+#: public/partials/contest-code-checker-public-display.php:107
+msgid "You have entered a winner!"
+msgstr "Hai inserito un codice vincente!"
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/contest-code-checker/"
+msgstr "https://wordpress.org/plugins/contest-code-checker/"
+
+#. Description of the plugin/theme
+msgid ""
+"Maintain a list of contest codes and have users check to see if they have "
+"won anything"
+msgstr ""
+"Mantieni una lista di codici del contest e permetti agli utenti di vedere "
+"se hanno vinto qualcosa"
+
+#. Author of the plugin/theme
+msgid "Swim or Die Software"
+msgstr "Swim or Die Software"
+
+#. Author URI of the plugin/theme
+msgid "http://www.swimordiesoftware.com"
+msgstr "http://www.swimordiesoftware.com"

@@ -1,30 +1,29 @@
-=== Contest Code Checker ===
+=== Run Contests, Raffles, and Giveaways with Contest Code Checker ===
 Contributors: mdedev
-Tags: contests, giveaways, sweepstakes, competition
+Tags: contests, giveaways, sweepstakes, raffles
 Requires at least: 4.0
-Tested up to: 5.3.0
+Tested up to: 5.3.2
 Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A plugin to allow for people to enter in a contest code and see if they won a prize
+An easy to use WordPress plugin to do giveaways.
 
 == Description ==
 
-> If you are looking for a quicker or more in-depth support response it is suggested to check out <a href="https://www.contestcodechecker.com/" target="_blank" title="[new window to Contest Code Checker Pro]">Contest Code Checker Pro</a> or you can <a href="https://www.contestcodechecker.com/contact/" target="_blank">Contact Us</a> and we will help you as best as possible.
-
-This plugin was created for people who have contest codes on a physical or electronic product that are tied to a prize. The user who receives the contest code can go to a page or post and enter in their name, email and code and get back if they have won or lost.
-
-The following capabilies exist:
-
-* User-facing form to check contest codes
+<a href="https://www.contestswp.com/" title="Contest Code Checker">Contest Code Checker</a> was built to make it easy to run contests and giveaways on WordPress. This plugin was created to make it easy for people to run contests or giveaways on their WordPress site. The free version has the following features:
+* User-facing form to check contest codes that can be easily customized
+* Ability to share prizes across multiple contest codes with "generic prizes"
 * Admin area to manage contest codes with the ability to import codes
 * Admin area to view contestants, also export contestants
 
-= ADDITIONAL FEATURES IN THE <a target="_new" href="https://www.contestcodechecker.com/">PREMIUM VERSION</a> =
+= Additional Features in the <a target="_new" href="https://www.contestswp.com/">Premium Version</a> =
 * Multiple contests
 * Custom fields
-* More info at <a target="_new" href="https://www.contestcodechecker.com"/>https://www.contestcodechecker.com</a>
+* Ability to check the contest code before asking additional questions
+* CAPTCHA support
+* And much much more
+* More info at <a target="_new" href="https://www.contestswp.com"/>https://www.contestswp.com</a>
 
 == Installation ==
 
