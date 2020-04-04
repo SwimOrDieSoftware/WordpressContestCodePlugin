@@ -12,6 +12,7 @@ An easy to use WordPress plugin to do giveaways.
 == Description ==
 
 <a href="https://www.contestswp.com/" title="Contest Code Checker">Contest Code Checker</a> was built to make it easy to run contests and giveaways on WordPress. This plugin was created to make it easy for people to run contests or giveaways on their WordPress site. The free version has the following features:
+
 * User-facing form to check contest codes that can be easily customized
 * Ability to share prizes across multiple contest codes with "generic prizes"
 * Admin area to manage contest codes with the ability to import codes
