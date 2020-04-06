@@ -1,4 +1,4 @@
-=== Run Contests, Raffles, and Giveaways with Contest Code Checker ===
+=== Run Contests, Raffles, and Giveaways with ContestsWP ===
 Contributors: mdedev
 Tags: contests, giveaways, sweepstakes, raffles
 Requires at least: 4.0
@@ -11,18 +11,26 @@ An easy to use WordPress plugin to do giveaways.
 
 == Description ==
 
-<a href="https://www.contestswp.com/" title="Contest Code Checker">Contest Code Checker</a> was built to make it easy to run contests and giveaways on WordPress. This plugin was created to make it easy for people to run contests or giveaways on their WordPress site. The free version has the following features:
+<a href="https://www.contestswp.com/" title="ContestsWP">ContestsWP</a> was developed so that you can easily build, launch, and operate contests and giveaways on your WordPress site. Whether you are running a promotion for a few dozen or a few hundred thousand contestants, ContestsWP is an effective and simple plugin which seamlessly integrates with your existing installation and plugins. 
 
-* User-facing form to check contest codes that can be easily customized
-* Ability to share prizes across multiple contest codes with "generic prizes"
+Launched in 2017, ContestsWP is currently used by hundreds of site owners and developers. Below are some examples of how ContestsWP is currently deployed:
+
+ABC Autos is an up and coming car dealership in Detroit, MI. Upon visiting the dealerships website, a user is encouraged to sign up for the dealerships monthly newsletter via the user facing ContestsWP form (ContestsWP Pro can integrate with Mailchimp) and enter their monthly drawing for free oil changes for one year. The user simply enters their name and email address. Once per month, it takes the dealership just a few seconds to randomly pick the winner using the ContestsWP plugin. Since deploying ContestsWP, ABC Autos has seen a 300% increase in newsletter sign ups and has dramatically reduced the staff time needed to run the giveaway.
+
+DEF Store in the Netherlands wants to increase their online sales. In order to do this they send out an email to their mailing list saying that for every online order they make they will get a code to check for a prize. The customer can then use the code on a ContestsWP form to see what they have won.
+
+* User-facing contest form that can be easily customized
 * Admin area to manage contest codes with the ability to import codes
-* Admin area to view contestants, also export contestants
+* Admin area to view and export contestants
 
 = Additional Features in the <a target="_new" href="https://www.contestswp.com/">Premium Version</a> =
-* Multiple contests
-* Custom fields
-* Ability to check the contest code before asking additional questions
+* Set up and run Multiple contests
+* Add custom fields to user-facing form
+* Only show additional fields for winner contest codes
 * CAPTCHA support
+* Mailchimp integration
+* Personal support from the developer
+* Run contests of any size with as many contestants as you want
 * And much much more
 * More info at <a target="_new" href="https://www.contestswp.com"/>https://www.contestswp.com</a>
 
@@ -51,7 +59,7 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. Contestants admin listing
 1. Contest code admin listing
 1. Contest code admin import area
-1. Contest code checker settings area
+1. ContestsWP settings area
 
 == Changelog ==
 
