@@ -19,6 +19,8 @@ ABC Autos is an up and coming car dealership in Detroit, MI. Upon visiting the d
 
 DEF Store in the Netherlands wants to increase their online sales. In order to do this they send out an email to their mailing list saying that for every online order they make they will get a code to check for a prize. The customer can then use the code on a ContestsWP form to see what they have won.
 
+The free version has the following features:
+
 * User-facing contest form that can be easily customized
 * Admin area to manage contest codes with the ability to import codes
 * Admin area to view and export contestants
