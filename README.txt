@@ -26,7 +26,7 @@ The free version has the following features:
 * Admin area to view and export contestants
 
 = Additional Features in the <a target="_new" href="https://www.contestswp.com/">Premium Version</a> =
-* Set up and run Multiple contests
+* Set up and run ultiple contests
 * Add custom fields to user-facing form
 * Only show additional fields for winner contest codes
 * CAPTCHA support
@@ -34,7 +34,7 @@ The free version has the following features:
 * Personal support from the developer
 * Run contests of any size with as many contestants as you want
 * And much much more
-* More info at <a target="_new" href="https://www.contestswp.com"/>https://www.contestswp.com</a>
+* More info at <a target="_new" href="https://www.contestswp.com">https://www.contestswp.com</a>
 
 == Installation ==
 
