@@ -21,7 +21,7 @@ DEF Store in the Netherlands wants to increase their online sales. In order to d
 
 The free version has the following features:
 
-* User-facing contest form that can be easily customized
+* Front-end contest form that can be easily customized
 * Admin area to manage contest codes with the ability to import codes
 * Admin area to view and export contestants
 
