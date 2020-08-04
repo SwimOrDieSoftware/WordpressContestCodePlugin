@@ -105,6 +105,9 @@ class CCC_Contest_Code_Checker {
 		 */
 		require_once $pluginPath . 'includes/class-contest-code-checker-loader.php';
 
+		/* Excel file reader */
+		require_once $pluginPath . 'includes/spout/src/Spout/Autoloader/autoload.php';
+
 		/* Data Classes */
 		require_once $pluginPath . 'includes/class-contest-code-checker-contest-codes.php';
 		require_once $pluginPath . 'includes/class-contest-code-checker-contestant.php';

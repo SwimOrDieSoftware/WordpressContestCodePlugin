@@ -3,7 +3,7 @@ Contributors: mdedev
 Tags: contests, giveaways, sweepstakes, raffles
 Requires at least: 4.0
 Tested up to: 5.4.0
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,9 @@ Yes, that is where the main development is done - https://github.com/SwimOrDieSo
 1. ContestsWP settings area
 
 == Changelog ==
+
+= 1.1.8 =
+* Replaced the old import library with a newer Excel parsing library that is faster and has less bugs.
 
 = 1.1.7 =
 * Updated the pot file for translations

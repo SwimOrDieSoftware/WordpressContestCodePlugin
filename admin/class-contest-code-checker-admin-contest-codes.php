@@ -1,4 +1,6 @@
 <?php
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+use Box\Spout\Common\Type;
 
 /**
  * The admin-specific functionality for managing contest codes
@@ -15,7 +17,7 @@
  * Defines the functionality to handle CRUD operations and importing/exporting contest codes
  *
  * @package    Contest_Code_Checker
- * @subpackage Contest_Code_Checker/admin
+ * @subpackage Contest_Code_Checker/ad min
  * @author     Mike de Libero <mikede@mde-dev.com>
  */
 class CCC_Contest_Code_Checker_Admin_Contest_Codes {
@@ -184,29 +186,52 @@ class CCC_Contest_Code_Checker_Admin_Contest_Codes {
   			(count($_FILES) > 0) ) {
 
 			set_time_limit(0); // Set the time limit to forever to handle large files being imported...
-      		require(plugin_dir_path( dirname( __FILE__ ) ).'includes/spreadsheet-reader/php-excel-reader/excel_reader2.php');
-      		require(plugin_dir_path( dirname( __FILE__ ) ).'includes/spreadsheet-reader/SpreadsheetReader.php');
 
-      		$data = new SpreadsheetReader($_FILES['importFile']['tmp_name'], $_FILES['importFile']['name']);
+      		$reader = $this->get_file_type_reader($_FILES['importFile']['name']);
+      		if ( null !== $reader ) {
+      			$reader->open( $_FILES['importFile']['tmp_name'] );
+				foreach ( $reader->getSheetIterator() as $sheet ) {
+					foreach ( $sheet->getRowIterator() as $row ) {
+						$tmp_array = $row->getCells();
+						if((count($tmp_array) > 0) && !empty($tmp_array[0])) {
+							$code = new CCC_Contest_Codes();
+							$data = array();
 
-			foreach($data as $row) {
-				if((count($row) > 0) && !empty($row[0])) {
-					$code = new CCC_Contest_Codes();
-					$data = array();
+							$data['post_title'] = $tmp_array[0];
 
-					$data['post_title'] = $row[0];
+							if(!empty($tmp_array[1])) {
+								$data['prize'] = $tmp_array[1];
+							}
 
-					if(!empty($row[1])) {
-						$data['prize'] = $row[1];
+							if(!empty($tmp_array[2])) {
+								$data['prizeInformation'] = $tmp_array[2];
+							}
+
+							$code->save($data, true);
+						} // if ((count($row)...
 					}
-
-					if(!empty($row[2])) {
-						$data['prizeInformation'] = $row[2];
-					}
-
-					$code->save($data, true);
-				} // if ((count($row)...
-			} // foreach($data as $row..
+				} // foreach ( $reader->getSheetIterator()...
+			}
   		} // nonce check if-statement
   	}
+
+  	/**
+	 * Gets the file type based on the users uploaded extension.
+	 *
+	 * @param  string $file_path The file name that the user uploaded for importing.
+	 * @return object            Null or the Spout type used for parsing the files.
+	 */
+	private function get_file_type_reader( $file_path ) {
+		$ext = strtolower( pathinfo( $file_path, PATHINFO_EXTENSION ) );
+
+		if ( 'csv' === $ext ) {
+			return ReaderEntityFactory::createCSVReader();
+		} elseif ( 'xlsx' === $ext ) {
+			return ReaderEntityFactory::createXLSXReader();
+		} elseif ( 'ods' === $ext ) {
+			return ReaderEntityFactory::createODSReader();
+		}
+
+		return null;
+	}
 }
