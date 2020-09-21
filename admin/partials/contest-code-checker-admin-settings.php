@@ -15,7 +15,7 @@
  */
 class CCC_Contest_Code_Checker_Admin_Settings {
 
-	public function display_settings() {
+	public function display_settings() {		
 	?>
 		<div class="wrap">
 			<?php if( isset($_GET['settings-updated']) ) { ?>
@@ -23,7 +23,7 @@ class CCC_Contest_Code_Checker_Admin_Settings {
         	<p><strong><?php _e('Settings saved.') ?></strong></p>
     		</div>
 			<?php } ?>
-			<h1><?php _e("Contest Code Checker General Settings", "contest-code"); ?></h1>
+			<h1><?php _e("ContestsWP General Settings", "contest-code"); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 					settings_fields("contest_code_checker_options");

@@ -149,8 +149,8 @@ class CCC_Contest_Code_Checker_Admin {
 	 * @since 1.0.0
 	 */
 	public function register_menus() {
-		add_menu_page(__("Contest Code Checker", "contest-code"),
-					  __("Contest Code Checker", "contest-code"),
+		add_menu_page(__("ContestsWP", "contest-code"),
+					  __("ContestsWP", "contest-code"),
 					  $this->get_required_capability(),
 					  "contest-code-checker",
 					  array($this, "show_settings_page"));
